@@ -1,6 +1,19 @@
 ---
 
 #########################################################
+## Pre-installation                                    ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items: 
+    - repository_url
+
+#########################################################
 ## Pre-installation platform check                     ##
 #########################################################
 
@@ -28,6 +41,8 @@
 # Check if kubernetes is installed
 # TODO
 
+# If no podman or kubernetes is detected, use install on host
+# TODO
 
 #########################################################
 ## Pre-installation uninstall                          ##
@@ -50,7 +65,6 @@
     state: directory
     owner: 200
 
-
 #########################################################
 ## Installation                                        ##
 #########################################################
@@ -66,11 +80,64 @@
 
 - block:
 
-  # Create Sonatype Nexus pod
-  - name: Create Sonatype Nexus pod
+  ##################################
+  # Import container image         # 
+  ##################################
+
+  # Pull image from repository to local image repository. If failed, lookup local image file.
+  - name: Pull Vault container image from repository
+    containers.podman.podman_image:
+      name: "{{ repository_url }}"
+    register: pull_result
+    ignore_errors: true
+
+  # Lookup image file name if pull result failed
+  - name: Lookup Nexus container image file name
+    set_fact:
+      container_image_file: "{{ lookup('fileglob', '{{ role_path }}/files/nexus_*.tar') }}"
+    register: image_file_result
+    when: pull_result is failed
+
+  # Fail if image file not found
+  - name: Fail if Nexus container image file not found
+    fail:
+      msg: "Repository URL {{ repository_url }} not found. Alternate container file location files/nexus_*.tar not found. Cannot continue..."
+    when: 
+      - image_file_result is failed
+      - pull_result is failed
+
+  # Copy image file to destination
+  - name: Copy Nexus container image file to destination
+    copy:
+      src: "{{ container_image_file }}"
+      dest: "/tmp/nexus.tar"
+    when: pull_result is failed
+
+  # Load image from file if pull failed
+  - name: Import Nexus container image to podman
+    shell: podman load -i /tmp/nexus.tar
+    when: pull_result is failed
+
+  # Get image info from podman
+  - name: Gather info on Nexus container image
+    containers.podman.podman_image_info:
+      name: nexus3
+    register: image_info_result
+
+  # Get Id from image info
+  - name: Get Id from image info
+    set_fact:
+      image_id: "{{ image_info_result.images[0].Id[:12] }}"
+
+  ##################################
+  # Create Nexus container         #
+  ##################################
+
+  # Create Sonatype Nexus container
+  - name: Create Sonatype Nexus container
     containers.podman.podman_container:
       name: nexus
-      image: "{{ repository_url }}:latest"
+      image: "{{ image_id }}"
       ports:
         - 8081:8081
       volumes:
@@ -94,7 +161,6 @@
       dest: /etc/systemd/system
 
   when: platform == "podman"
-
 
 #########################################################
 ## Installation via kubernetes                         ##
