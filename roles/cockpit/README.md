@@ -3,10 +3,12 @@
 ***
 
 <img src="media/icon_cockpit.png" align="left" height="128" width="128" />
-Ansible role voor installatie en configuratie van Redhat Cockpit, een webbased UI voor het beheer van Redhat servers. 
-Indien gedetecteerd, worden plugins voor Podman en KVM virtuele machines automatisch geinstalleerd.
-De UI is na installatie bereikbaar via `https://<servernaam/ip>:9090`
-Website leverancier: `https://project-cockpit.org`
+Ansible role voor installatie en configuratie van Redhat Cockpit, een webbased UI voor het beheer van Redhat servers.<br/> 
+Indien gedetecteerd, worden plugins voor Podman en KVM virtuele machines automatisch geinstalleerd.<br/>
+De UI is na installatie bereikbaar via `https://<servernaam/ip>:9090`<br/>
+Website leverancier: `https://project-cockpit.org`<br/>
+<br/>
+
 
 ***
 
@@ -24,6 +26,7 @@ action: **uninstall**<br/>
 De-installatie van RedHat Cockpit. Verwijderen configuratie folder.<br/>
 variables:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+
 
 
 Bij installatie worden volgende configuratie instellingen gedaan:<br />

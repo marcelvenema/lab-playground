@@ -3,7 +3,10 @@
 ***
 
 <img src="media/icon_management.png" align="left" height="128" width="128" />
-Ansible role voor het uitvoeren van diverse lokale management taken tijdens installatie en configuratie van een server.
+Ansible role voor het uitvoeren van diverse lokale management taken tijdens installatie en configuratie van een server.<br/>
+<br/>
+<br/>
+<br/>
 
 ***
 
