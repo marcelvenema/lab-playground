@@ -1,0 +1,24 @@
+---
+
+#########################################################
+## Configuration                                       ##
+#########################################################
+
+# Copy banner to Cockpit configuration folder
+- name: Copy banner to Cockpit configuration folder
+  copy:
+    src: ./media/banner_cockpit.txt
+    dest: /etc/cockpit/banner
+
+# Add custom logo to Cockpit login page
+- name: Add custom logo to Cockpit login page
+  copy:
+   src: ./media/logo_cockpit.png
+   dest: /usr/share/cockpit/branding/rhel/logo.png
+   backup: true 
+
+# Restart Cockpit service
+- name: Restart Cockpit service
+  systemd:
+    name: cockpit.socket
+    state: restarted

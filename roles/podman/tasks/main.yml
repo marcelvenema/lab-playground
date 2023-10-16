@@ -1,0 +1,25 @@
+--- 
+
+- name: Set wait
+  set_fact:
+    wait: false
+  when: wait is not defined
+
+- name: Verify variable input
+  assert:
+    that:
+      - action is defined and action in actions
+    fail_msg: "Please provide 'action' {{ actions }}"
+    quiet: true
+
+- name: Install
+  include_tasks: install.yml
+  when: action == "install"
+
+- name: Uninstall
+  include_tasks: uninstall.yml
+  when: action == "uninstall"
+
+- name: Configure
+  include_tasks: configure.yml
+  when: action == "configure"

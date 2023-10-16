@@ -1,0 +1,35 @@
+---
+
+#########################################################
+## Vault module                                        ##
+#########################################################
+
+# Store usernames and passwords in Hashicorp Vault.
+- name: Store Nexus usernames and passwords in Vault
+  include_role: 
+    name: vault
+    tasks_from: secrets.yml
+  vars:
+    action: create_secret
+    vault_name: "{{ admin_hostname | replace('.','-')}}"
+    secret_name: "SonatypeNexusRepository"
+    secret_keyvalue: "{ 'admin_password': '{{ nexus_admin_password }}', 'automation_username':'{{ automation_username }}', 'automation_password':'{{ nexus_automation_password }}', 'automation_address': '{{ nexus_hostname }}' }"
+
+# Create Vault policy for Nexus
+- name: Create Vault policy for Nexus
+  include_role: 
+    name: vault
+    tasks_from: policies.yml
+  vars:
+    action: create_policy
+    vault_name: "{{ admin_hostname | replace('.','-')}}"
+    vault_policy_name: "sonatypenexusrepository"
+    vault_policy_rules: "path \"{{ vault_name }}/data/{{vault_policy_name}}\" { capabilities = [\"create\", \"update\", \"read\"] }"
+
+# Create Vault AppRole for Nexus
+
+
+
+
+# Generate RoleID and SecretID for Nexus
+

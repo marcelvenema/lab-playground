@@ -1,0 +1,45 @@
+---
+
+actions:
+  # install vault in podman
+  - install
+  # uninstall vault in podman
+  - uninstall
+  # configure vault, create secret engine, unseal vault
+  - configure
+  # ----------------------------------------
+  # get secret engine
+  - get_secret_engine
+    # create secret engine
+  - create_secret_engine
+  # destroy secret engine
+  - destroy_secret_engine
+  # ----------------------------------------
+  # get secret
+  - get_secret
+  # create secret
+  - create_secret
+  # destroy secret
+  - destroy_secret
+  # ----------------------------------------
+  # get policy
+  - get_policy
+  # create policy
+  - create_policy
+  # destroy policy
+  - destroy_policy
+  # ----------------------------------------
+  # get approle
+  - get_approle
+  # create approle
+  - create_approle
+  # destroy approle
+  - destroy_approle
+  # ----------------------------------------
+  # unseal vault
+  - unseal
+
+rolevars:
+  - vault_address
+  - vault_token
+  

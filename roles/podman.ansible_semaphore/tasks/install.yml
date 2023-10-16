@@ -1,0 +1,100 @@
+---
+
+#########################################################
+## Pre-installation                                    ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items: 
+    - repository_url
+    - semaphore_admin_username 
+    - semaphore_admin_password
+    - semaphore_admin_email 
+
+# Check if Semaphore pod is present, if so remove it
+- name: Check if Semaphore pod is present
+  containers.podman.podman_container_info:
+    name: semaphore
+  register: semaphore_pod_info
+  ignore_errors: true
+
+# Run uninstall if Semaphore pod is present
+- name: Run uninstall playbook if Semaphore pod is present
+  include_tasks: uninstall.yml
+  when: semaphore_pod_info is defined
+
+# Create Semaphore config folder
+- name: Create Semaphore config folder
+  file:
+    path: /data/semaphore/config
+    state: directory
+
+# Create Semaphore data folder
+- name: Create Semaphore data folder
+  file:
+    path: /data/semaphore/data
+    state: directory
+
+#########################################################
+## Installation                                        ##
+#########################################################
+
+# Create Ansible pod from commandline
+- name: Create Ansible pod
+  shell: podman pod create --name ansible -p 3000:3000 -p 3306:3306
+
+# Create encryption key
+- name: Create encryption key
+  shell: head -c32 /dev/urandom | base64
+  register: encryption_key_output
+
+# Create MySQL pod
+- name: Create MySQL pod
+  containers.podman.podman_container:
+    name: mysql
+    image: docker.io/mysql/mysql-server:latest
+    pod: ansible
+    volumes:
+      - /data/semaphore/data:/var/lib/mysql:Z
+    restart_policy: unless-stopped
+    env:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+      MYSQL_PASSWORD: semaphore
+ 
+# Create Semaphore pod
+- name: Create Semaphore pod
+  containers.podman.podman_container:
+    name: semaphore
+    image: "{{ repository_url }}:latest"
+    pod: ansible
+    volumes:
+      - /data/semaphore/data:/opt/data/semaphore:Z
+    restart_policy: unless-stopped
+    env:
+      SEMAPHORE_ADMIN_NAME: "{{ semaphore_admin_username }}"
+      SEMAPHORE_ADMIN_PASSWORD: "{{ semaphore_admin_password }}"
+      SEMAPHORE_ADMIN_EMAIL: "{{ semaphore_admin_email }}"
+      SEMAPHORE_ADMIN: "{{ semaphore_admin_username }}"
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: semaphore
+      SEMAPHORE_DB_HOST: mysql
+      SEMAPHORE_DB_PORT: 3306
+      SEMAPHORE_DB_DIALECT: mysql
+      SEMAPHORE_DB: semaphore
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: "{{ encryption_key_output }}"
+
+#########################################################
+## Configuration                                       ##
+#########################################################
+
+# Configure Semaphore
+- name: Configure
+  include_tasks: configure.yml

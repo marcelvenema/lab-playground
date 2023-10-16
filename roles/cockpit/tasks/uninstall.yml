@@ -1,0 +1,24 @@
+---
+
+#########################################################
+## Uninstall                                           ##
+#########################################################
+
+# Stop Cockpit service
+- name: Stop Cockpit service
+  systemd:
+    name: cockpit.socket
+    state: stopped
+    enabled: no
+
+# Delete Cockpit configuration
+- name: Delete Cockpit configuration
+  file:
+    path: /etc/cockpit
+    state: absent
+
+# Remove Cockpit package
+- name: Remove Cockpit package
+  package:
+    name: cockpit
+    state: absent

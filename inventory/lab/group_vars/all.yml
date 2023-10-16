@@ -1,0 +1,14 @@
+---
+
+ansible_user: ansible
+systemd_dir: /etc/systemd/system
+master_ip: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
+
+lab_hostname: labserver.marcelvenema.com
+lab_username: admin
+lab_usercomment: "Admin user for Lab environment"
+lab_password: Password29!
+lab_email: marcel@marcelvenema.com
+
+automation_username: ansible
+automation_email: "ansible@marcelvenema.com"

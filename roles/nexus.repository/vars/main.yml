@@ -1,0 +1,35 @@
+---
+
+actions:
+  # install Nexus Repository
+  - install
+  # uninstall Nexus Repository
+  - uninstall
+  # configure Nexus Repository
+  - configure
+  # update Nexus Repository
+  - update
+  # ----------------------------------------
+  # get user
+  - get_user
+  # create user
+  - create_user
+  # destroy user
+  - destroy_user
+  # ----------------------------------------
+  # get repository
+  - get_repository
+  # create repository
+  - create_repository
+  # destroy repository
+  - destroy_repository
+  # ----------------------------------------
+  # import artifacts
+  - import_artifacts
+  # export artifacts
+  - export_artifacts
+  # sync artifacts
+  - sync_artifacts
+# ----------------------------------------
+
+

@@ -1,0 +1,144 @@
+---
+
+#########################################################
+## Pre-installation platform check                     ##
+#########################################################
+
+# Override platform check if platform variable is defined.
+- name: Override platform check if platform variable is defined.
+  set_fact:
+    platform_check: false
+  when: platform is defined
+
+# Check if Podman is installed
+- name: Check if Podman is installed
+  command: podman --version
+  register: podman_version_output
+  ignore_errors: true
+  when: platform_check is not defined
+
+# Set platform if Podman is detected
+- name: Set platform if Podman is detected
+  set_fact:
+    platform: "podman"
+  when: 
+    - platform_check is not defined
+    - '"podman" in podman_version_output.stdout'
+
+# Check if kubernetes is installed
+# TODO
+
+# If no podman or kubernetes is detected, use install on host
+# TODO
+
+#########################################################
+## Pre-installation uninstall                          ##
+#########################################################
+
+# Run uninstall if uninstall is set
+- name: Run uninstall playbook if set
+  include_tasks: uninstall.yml
+  ignore_errors: true
+  when: uninstall == true
+
+#########################################################
+## Pre-installation folders                            ##
+#########################################################
+
+# Create MySQL data folder
+- name: Create MySQL data folder
+  file:
+    path: /data/mysql/data
+    state: directory
+
+#########################################################
+## Pre-installation users/groups                       ##
+#########################################################
+
+- name: Declare variables
+  set_fact:
+    mysql_root_password: ""
+    # TODO
+
+#########################################################
+## Installation via podman                             ##
+#########################################################
+
+- block:
+
+  # Create MySQL pod
+  - name: Create MySQL pod
+    containers.podman.podman_container:
+      name: mysql
+      image: docker.io/mysql:latest
+      ports:
+        - 3306:3306
+      volumes:
+        - /data/mysql/data/:/var/lib/mysql:Z
+      restart_policy: always
+      env:
+        MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+
+  # Auto-start MySQL pod on system boot
+  - name: Generate systemd unit file for MySQL pod
+    containers.podman.podman_generate_systemd:
+      name: mysql
+      new: true
+      no_header: true
+      dest: /etc/systemd/system
+
+
+  when: platform == "podman"
+
+#########################################################
+## Installation via kubernetes                         ##
+#########################################################
+
+- block:
+
+  # Debug message
+  - name: Debug message
+    debug:
+      msg: "Install MySQL via kubernetes"
+  
+  # Show information message
+  - name: This part is not (yet) implemented.
+    debug:
+      msg: "This part is not (yet) implemented."
+
+  # Stop playbook
+  - name: Stop playbook
+    meta: end_play
+
+  when: platform == "kubernetes"
+
+#########################################################
+## Installation on host                                ##
+#########################################################
+
+- block:
+
+  # Debug message
+  - name: Debug message
+    debug:
+      msg: "Install MySQL on host"
+  
+  # Show information message
+  - name: This part is not (yet) implemented.
+    debug:
+      msg: "This part is not (yet) implemented."
+
+  # Stop playbook
+  - name: Stop playbook
+    meta: end_play
+
+  when: platform == "host"
+
+#########################################################
+## Configuration                                       ##
+#########################################################
+
+# Configure MySQL
+- name: Configure MySQL
+  include_tasks: configure.yml 
+

@@ -1,0 +1,65 @@
+---
+# This is the main installation file to install the lab server
+# It will install the following:
+# - podman, cockpit, hashicorp vault, semaphore, gogs, nexus repository
+#
+#
+
+- hosts: lab_server
+  vars:
+    uninstall: true
+  roles:
+    - role: management
+      become: true
+      vars:
+        action: configure
+        admin_hostname: "{{ lab_hostname }}"
+        admin_username: "{{ lab_username }}"
+        admin_usercomment: "{{ lab_usercomment }}"
+        admin_password: "{{ lab_password }}"
+
+    - role: podman
+      become: true
+      gather_facts: true
+      vars:
+        action: install
+
+    - role: cockpit
+      become: true
+      gather_facts: true  
+      vars:
+        action: install
+ 
+    - role: vault
+      become: true
+      vars:
+        action: install
+        repository_url: "docker.io/hashicorp/vault"
+
+#    - role: mysql
+#      become: true
+#      vars:
+#        action: install
+#        repository_url: "docker.io/mysql/mysql-server"
+
+    - role: podman.ansible_semaphore
+      become: true
+      vars:
+        action: install
+        repository_url: "docker.io/semaphoreui/semaphore"
+        semaphore_admin_username: "{{ lab_username }}"
+        semaphore_admin_password: "{{ lab_password }}"
+        semaphore_admin_email: "{{ lab_email }}"
+
+
+    - role: podman.gogs
+      become: true
+      vars:
+        action: install
+        repository_url: "docker.io/gogs/gogs"
+
+    - role: nexus.repository
+      become: true
+      vars:
+        action: install
+        repository_url: "docker.io/sonatype/nexus3"

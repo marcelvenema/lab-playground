@@ -1,0 +1,58 @@
+---
+
+#########################################################
+## Pre-installation                                    ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items: 
+    - repository_url
+
+# Check if Gogs pod is present, if so remove it
+- name: Check if Gogs pod is present
+  containers.podman.podman_container_info:
+    name: gogs
+  register: gogs_pod_info
+  ignore_errors: true
+
+# Run uninstall if Gogs pod is present
+- name: Run uninstall if Gogs pod is present
+  include_tasks: uninstall.yml
+  when: gogs_pod_info is defined
+
+# Create Gogs folder
+- name: Create Gogs config folder
+  file:
+    path: /data/gogs
+    state: directory
+
+#########################################################
+## Installation                                        ##
+#########################################################
+
+# Create Gogs pod
+- name: Create Gogs git pod
+  containers.podman.podman_container:
+    name: gogs
+    image: "{{ repository_url }}:latest"
+    ports:
+      - 10022:0022
+      - 10880:3000
+    volumes:
+      - /data/gogs:/data:Z
+    restart_policy: always
+    state: started
+
+# Auto-start Gogs pod on boot
+- name: Generate systemd unit file for Gogs pod
+  containers.podman.podman_generate_systemd:
+    name: gogs
+    new: true
+    no_header: true
+    dest: /etc/systemd/system
+

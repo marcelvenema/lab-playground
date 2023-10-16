@@ -1,0 +1,17 @@
+---
+
+- name: Set wait
+  set_fact:
+    wait: false
+  when: wait is not defined
+
+- name: Verify variable input
+  assert:
+    that:
+      - action is defined and action in actions
+    fail_msg: "Please provide 'action' {{ actions }}"
+    quiet: true
+
+- name: Configure management options
+  include_tasks: configure.yml
+  when: action == "configure"

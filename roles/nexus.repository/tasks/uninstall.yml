@@ -1,0 +1,34 @@
+---
+
+#########################################################
+## Uninstall                                           ##
+#########################################################
+
+# Remove Sonatype Nexus folder
+- name: Remove Sonatype Nexus folder
+  file:
+    path: /data/nexus/nexus-data
+    state: absent
+
+#########################################################
+## Uninstall via podman                                ##
+#########################################################
+
+- block:
+
+  # Check if Nexus pod is present
+  - name: Check if Nexus pod is present
+    containers.podman.podman_container_info:
+      name: nexus
+    register: nexus_pod_info
+    ignore_errors: true
+
+  # Remove Sonatype Nexus pod
+  - name: Remove Sonatype Nexus pod
+    containers.podman.podman_container:
+      name: nexus
+      state: absent
+    when: nexus_pod_info is defined
+
+  when: platform == "podman"
+  

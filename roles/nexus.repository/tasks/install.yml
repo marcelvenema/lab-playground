@@ -1,0 +1,149 @@
+---
+
+#########################################################
+## Pre-installation platform check                     ##
+#########################################################
+
+# Override platform check if platform variable is defined.
+- name: Override platform check if platform variable is defined.
+  set_fact:
+    platform_check: false
+  when: platform is defined
+
+# Check if Podman is installed
+- name: Check if Podman is installed
+  command: podman --version
+  register: podman_version_output
+  ignore_errors: true
+  when: platform_check is not defined
+
+# Set platform if Podman is detected
+- name: Set platform if Podman is detected
+  set_fact:
+    platform: "podman"
+  when: 
+    - platform_check is not defined
+    - '"podman" in podman_version_output.stdout'
+
+# Check if kubernetes is installed
+# TODO
+
+
+#########################################################
+## Pre-installation uninstall                          ##
+#########################################################
+
+# Run uninstall if uninstall is set
+- name: Run uninstall playbook if set
+  include_tasks: uninstall.yml
+  ignore_errors: true
+  when: uninstall == true
+
+#########################################################
+## Pre-installation folders                            ##
+#########################################################
+
+# Create Sonatype Nexus data folder
+- name: Create Sonatype Nexus data folder
+  file:
+    path: /data/nexus/nexus-data
+    state: directory
+    owner: 200
+
+
+#########################################################
+## Installation                                        ##
+#########################################################
+
+# Display information message
+- name: Display information message
+  debug:
+    msg: "Please wait while installing Sonatype Nexus Repository..."
+
+#########################################################
+## Installation via podman                             ##
+#########################################################
+
+- block:
+
+  # Create Sonatype Nexus pod
+  - name: Create Sonatype Nexus pod
+    containers.podman.podman_container:
+      name: nexus
+      image: "{{ repository_url }}:latest"
+      ports:
+        - 8081:8081
+      volumes:
+        - /data/nexus/nexus-data:/nexus-data:Z
+      restart_policy: always
+
+  # Wait for Sonatype Nexus pod init to complete
+  - name: Wait for Sonatype Nexus pod init to complete
+    shell: podman logs nexus | grep "Started Sonatype Nexus OSS"
+    register: nexus_pod_init
+    until: nexus_pod_init.stdout.find("Started Sonatype Nexus OSS") != -1
+    retries: 10
+    delay: 10
+
+  # Auto-start Nexus pod on system boot
+  - name: Generate systemd unit file for Nexus pod
+    containers.podman.podman_generate_systemd:
+      name: nexus
+      new: true
+      no_header: true
+      dest: /etc/systemd/system
+
+  when: platform == "podman"
+
+
+#########################################################
+## Installation via kubernetes                         ##
+#########################################################
+
+- block:
+
+  # Debug message
+  - name: Debug message
+    debug:
+      msg: "Install Sonaatype Nexus via kubernetes"
+  
+  # Show information message
+  - name: This part is not (yet) implemented.
+    debug:
+      msg: "This part is not (yet) implemented."
+
+  # Stop playbook
+  - name: Stop playbook
+    meta: end_play
+
+  when: platform == "kubernetes"
+
+#########################################################
+## Installation on host                                ##
+#########################################################
+
+- block:
+
+  # Debug message
+  - name: Debug message
+    debug:
+      msg: "Install Sonatype Nexus on host"
+  
+  # Show information message
+  - name: This part is not (yet) implemented.
+    debug:
+      msg: "This part is not (yet) implemented."
+
+  # Stop playbook
+  - name: Stop playbook
+    meta: end_play
+
+  when: platform == "host"
+
+#########################################################
+## Configuration                                       ##
+#########################################################
+
+# Configure Sonatype Nexus
+- name: Configure Sonatype Nexus
+  include_tasks: configure.yml 

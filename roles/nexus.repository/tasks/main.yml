@@ -1,0 +1,74 @@
+--- 
+
+- name: Set wait
+  set_fact:
+    wait: false
+  when: wait is not defined
+
+- name: Verify variable input
+  assert:
+    that:
+      - action is defined and action in actions
+    fail_msg: "Please provide 'action' {{ actions }}"
+    quiet: true
+
+# -------------------------------------------------------
+  # install, uninstall, configure, update
+- name: Install
+  include_tasks: install.yml
+  when: action == "install"
+
+- name: Uninstall
+  include_tasks: uninstall.yml
+  when: action == "uninstall"
+
+- name: Configure
+  include_tasks: configure.yml
+  when: action == "configure"
+
+- name: Update
+  include_tasks: configure.yml
+  when: action == "configure"
+
+# -------------------------------------------------------
+  # users
+- name: Get user
+  include_tasks: users.yml
+  when: action == "get_user"
+
+- name: Create user
+  include_tasks: users.yml
+  when: action == "create_user"
+
+- name: Destroy user
+  include_tasks: users.yml
+  when: action == "destroy_user"
+
+# -------------------------------------------------------
+  # repositories
+- name: Get repository
+  include_tasks: repositories.yml
+  when: action == "get_repository"
+
+- name: Create repository
+  include_tasks: repositories.yml
+  when: action == "create_repository"
+
+- name: Destroy user
+  include_tasks: repositories.yml
+  when: action == "destroy_repository"
+
+# -------------------------------------------------------
+  # artifacts
+- name: Import artifacts
+  include_tasks: artifacts.yml
+  when: action == "import_artifacts"
+
+- name: Export artifacts
+  include_tasks: artifacts.yml
+  when: action == "export_artifacts"
+
+- name: Sync artifacts
+  include_tasks: artifacts.yml
+  when: action == "sync_artifacts"
+  
