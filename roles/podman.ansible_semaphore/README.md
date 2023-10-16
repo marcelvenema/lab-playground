@@ -3,7 +3,12 @@
 ***
 
 <img src="media/icon_semaphore.png" align="left" height="128" width="128" />
-Ansible role voor installatie en configuratie van Ansible Semaphore.
+Ansible role voor installatie en configuratie van Ansible Semaphore.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 
 ***
 

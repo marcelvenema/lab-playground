@@ -3,7 +3,12 @@
 ***
 
 <img src="media/icon_gogs.png" align="left" height="128" width="128" />
-Ansible role voor installatie en configuratie van Git Gogs.
+Ansible role voor installatie en configuratie van Git Gogs.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 
 ***
 

@@ -3,9 +3,12 @@
 ***
 
 <img src="media/icon_mysql.png" align="left" height="128" width="128" />
-Ansible role voor installatie en configuratie van MySQL database server. 
-Afhankelijk van de infrastructuur wordt deze als Podman pod (docker container), kubernetes container of direct op het besturingssysteem geinstalleerd.
-Website leverancier: `https://project-cockpit.org`
+Ansible role voor installatie en configuratie van MySQL database server.<br/> 
+Afhankelijk van de infrastructuur wordt deze als Podman pod (docker container), kubernetes container of direct op het besturingssysteem geinstalleerd.<br/>
+Website leverancier: `https://project-cockpit.org`<br/>
+<br/>
+<br/>
+
 
 ***
 

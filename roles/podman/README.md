@@ -3,7 +3,12 @@
 ***
 
 <img src="media/icon_podman.png" align="left" height="128" width="128" />
-Ansible role voor installatie en configuratie van podman.
+Ansible role voor installatie en configuratie van podman.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 
 ***
 
