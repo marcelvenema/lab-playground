@@ -35,13 +35,14 @@
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/hashicorp/vault or /tmp/vault_<version>.tar
-        repository_url: "docker.io/hashicorp/vault"
-        #repository_url: "/repository/vault_1.15.0.tar"
+        # repository_url: "docker.io/hashicorp/vault"
+        repository_url: "/repository/vault_1.15.0.tar"
 
     - role: mysql
       become: true
       vars:
         action: install
+        # repository url can be a url to repository or a local file. example: docker.io/mysql/mysql-server or /tmp/mysql_<version>.tar
         repository_url: "docker.io/mysql/mysql-server"
 
     - role: podman.ansible_semaphore
