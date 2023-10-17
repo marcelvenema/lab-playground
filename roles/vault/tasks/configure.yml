@@ -1,7 +1,7 @@
 ---
 
 #########################################################
-## Configuration                                       ##
+## Pre-configuration                                   ##
 #########################################################
 
 # Validate variables
@@ -29,6 +29,10 @@
 - name: Get content string from response
   set_fact:
     vault_init_status: "{{ vault_init_status.content }}"
+
+#########################################################
+## Configuration                                       ##
+#########################################################
 
 # Initialize Vault 
 - name: Initialize Vault server
@@ -87,4 +91,3 @@
     body:
       type: "approle"
       description: "AppRole authentication method for applications"
-

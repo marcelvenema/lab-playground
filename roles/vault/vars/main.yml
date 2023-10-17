@@ -1,11 +1,11 @@
 ---
 
 actions:
-  # install vault in podman
+  # install vault in podman, k3s, or host
   - install
-  # uninstall vault in podman
+  # uninstall vault in podman, k3s, or host
   - uninstall
-  # configure vault, create secret engine, unseal vault
+  # configure vault, create token and unseal keys, unseal vault
   - configure
   # ----------------------------------------
   # get secret engine

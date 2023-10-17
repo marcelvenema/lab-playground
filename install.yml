@@ -8,15 +8,22 @@
 - hosts: lab_server
   vars:
     uninstall: true
+    automation_username: ansible
+    automation_email: "ansible@marcelvenema.com"
+    lab_username: "admin"
+    lab_password: "Password29!"
+    lab_email: "marcel@marcelvenema.com"
+
   roles:
-    - role: management
+    - role: base-server-config
       become: true
       vars:
         action: configure
-        admin_hostname: "{{ lab_hostname }}"
+        admin_hostname: "lab.marcelvenema.com"
         admin_username: "{{ lab_username }}"
-        admin_usercomment: "{{ lab_usercomment }}"
+        admin_usercomment: "Admin user for lab server"
         admin_password: "{{ lab_password }}"
+        admin_email: "{{ lab_email }}"
 
     - role: podman
       become: true
@@ -35,15 +42,25 @@
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/hashicorp/vault or /tmp/vault_<version>.tar
-        # repository_url: "docker.io/hashicorp/vault"
-        repository_url: "/repository/vault_1.15.0.tar"
+        repository_url: "docker.io/hashicorp/vault"
+        #repository_url: "/repository/vault_1.15.0.tar"
+
+    - role: base-server-config
+      become: true
+      gather_facts: true
+      vars:
+        action: configure_vault
+        # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
+        # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
     - role: mysql
       become: true
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/mysql/mysql-server or /tmp/mysql_<version>.tar
-        repository_url: "docker.io/mysql/mysql-server"
+        repository_url: "/repository/mysql_8.1.0.tar"
+        # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
+        # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
     - role: podman.ansible_semaphore
       become: true
@@ -53,15 +70,22 @@
         semaphore_admin_username: "{{ lab_username }}"
         semaphore_admin_password: "{{ lab_password }}"
         semaphore_admin_email: "{{ lab_email }}"
+        # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
+        # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
     - role: podman.gogs
       become: true
       vars:
         action: install
         repository_url: "docker.io/gogs/gogs"
+        # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
+        # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
     - role: nexus.repository
       become: true
       vars:
         action: install
+        # repository url can be a url to repository or a local file. example: docker.io/sonatype/nexus3 or /tmp/nexus_<version>.tar
         repository_url: "docker.io/sonatype/nexus3"
+        # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
+        # vault_token: <token>                                      not neccecary if vault is installed on the same server

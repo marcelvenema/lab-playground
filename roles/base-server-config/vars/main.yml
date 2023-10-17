@@ -2,3 +2,4 @@
 
 actions:
   - configure
+  - configure_vault

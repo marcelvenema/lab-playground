@@ -96,6 +96,7 @@
     stat:
       path: "{{ repository_url }}"
     register: repository_url_result
+    delegate_to: localhost
     when: pull_result is failed
 
   # Fail if image file not found
@@ -103,8 +104,8 @@
     fail:
       msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
     when: 
-      - repository_url_result is failed
       - pull_result is failed
+      - repository_url_result.stat.exists == false
 
   # Copy image file to destination
   - name: Copy Nexus container image file to destination
@@ -119,12 +120,6 @@
     register: import_result
     when: pull_result is failed
 
-  # Check if import was successful
-  - name: Fail if import was not successful
-    fail:
-      msg: "Import of Nexus container image failed. ({{ repository_url }}) Cannot continue..."
-    when: import_result.rc != 0
-
   # Get image info from podman
   - name: Gather info on Nexus container image
     containers.podman.podman_image_info:
@@ -135,6 +130,13 @@
   - name: Get Id from image info
     set_fact:
       image_id: "{{ image_info_result.images[0].Id[:12] }}"
+
+  # Cleanup image file
+  - name: Cleanup container image file
+    file:
+      path: /tmp/nexus.tar
+      state: absent
+    when: pull_result is failed
 
   ##################################
   # Create Nexus container         #

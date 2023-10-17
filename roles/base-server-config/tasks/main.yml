@@ -12,6 +12,10 @@
     fail_msg: "Please provide 'action' {{ actions }}"
     quiet: true
 
-- name: Configure management options
+- name: Configure base-server-config settings
   include_tasks: configure.yml
   when: action == "configure"
+
+- name: Configure Vault for base-server-config settings
+  include_tasks: configure_vault.yml
+  when: action == "configure_vault"

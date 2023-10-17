@@ -114,20 +114,21 @@
     register: pull_result
     ignore_errors: true
 
-  # repository_url is a local container file, check if file exists
+  # repository_url is a local container file, check if file exists on ansible host
   - name: Check if repository_url is a local container file
     stat:
       path: "{{ repository_url }}"
     register: repository_url_result
+    delegate_to: localhost
     when: pull_result is failed
-   
+
   # Fail if image file not found
   - name: Fail if Vault container image file not found
     fail:
       msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
     when: 
-      - repository_url_result is failed
       - pull_result is failed
+      - repository_url_result.stat.exists == false
 
   # Copy image file to destination
   - name: Copy Vault container image file to destination
@@ -141,12 +142,6 @@
     shell: podman load -i /tmp/vault.tar
     register: import_result
     when: pull_result is failed
-  
-  # Check if import was successful
-  - name: Fail if import was not successful
-    fail:
-      msg: "Import of Vault container image failed. ({{ repository_url }}) Cannot continue..."
-    when: import_result.rc != 0
 
   # Get image info from podman
   - name: Gather info on Vault container image
@@ -158,6 +153,13 @@
   - name: Get Id from image info
     set_fact:
       image_id: "{{ image_info_result.images[0].Id[:12] }}"
+
+  # Cleanup image file
+  - name: Cleanup container image file
+    file:
+      path: /tmp/vault.tar
+      state: absent
+    when: pull_result is failed
 
   ##################################
   # Create Vault configuration     #
@@ -262,20 +264,6 @@
   set_fact:
     vault_address: "http://localhost:8200"
 
-# register vault_name
-- name: Register vault_name
-  set_fact:
-    vault_name: "{{ admin_hostname | replace('.','-')}}"
-
 # Configure Hashicorp Vault
 - name: Configure
   include_tasks: configure.yml
-
-
-# TODO: Move section to management rolen - action post_configure    
-# Create secret engine
-- name: Create secret engine
-  include_tasks: secret_engine.yml
-  vars:
-    action: create_secret_engine
-    vault_description: "Secrets for {{ admin_hostname }}"
