@@ -24,6 +24,10 @@ Het playbook installeert de volgende rollen:
   Access token en unseal keys zijn opgeslagen in /data/vault/config folder.<br/>
   Zie ook Ansible role [vault](roles/vault/README.md)<br/>
 
+- **Base-server-config**<br/>
+  Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
+  Zie ook Ansible role [base-server-config](roles/base-server-config/README.md)<br/>
+
 - **Ansible Semaphore**<br/>
   Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via http://<hostname>:3000<br/>
   Zie ook Ansible role [podman.semaphore](roles/podman.semaphore/README.md)<br/>
