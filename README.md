@@ -13,30 +13,34 @@ Het playbook installeert de volgende rollen:
 - **RedHat Cockpit**<br/>
   Browser-gebaseerde beheeromgeving voor Linux. Toegang via http://<hostname>:9090.<br/>
   Gebruikersnaam en wachtwoord zijn gedefinieerd in all.yml group_vars bestand als lab_username en lab_password.<br/>
-  Zie ook Ansible rol [cockpit](roles/cockpit/README.md)<br/>
+  Zie ook Ansible role [cockpit](roles/cockpit/README.md)<br/>
 
 - **Podman container infrastructure**<br/>
   Container infrastructuur. Kan worden beheerd via de Cockpit user interface.<br/>
+  Zie ook Ansible role [podman](roles/podman/README.md)<br/>
 
 - **Hashicorp Vault**<br/>
   Secret management. Geinstalleerd als container, benaderbaar via http://<hostname>:8200.<br/>
   Access token en unseal keys zijn opgeslagen in /data/vault/config folder.<br/>
+  Zie ook Ansible role [vault](roles/vault/README.md)<br/>
 
 - **Ansible Semaphore**<br/>
   Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via http://<hostname>:3000<br/>
+  Zie ook Ansible role [podman.semaphore](roles/podman.semaphore/README.md)<br/>
 
 - **Gogs - Git service**<br/>
   Geinstalleerd als container, benaderbaar via http://<hostname>:10880.<br/>
+  Zie ook Ansible role [podman.gogs](roles/podman.gogs/README.md)<br/>
 
 - **Sonatype Nexus Repository OSS**<br/>
   Artifact repository. Geinstalleerd als container, banderbaar via http://<hostname>:8081.<br/>
   User name is admin, initial password is opgeslagen in Vault.<br/>
+  Zie ook Ansible role [nexus](roles/nexus/README.md)<br/>
 
 
 # Pre-requisites
 
 Review en controleer de parameters in inventory/lab/group_vars/all.yml bestand.<br/>
-
 Installeer Ansible Galaxy collections via `sh requirements.sh`<br/>
 
 # Installatie
@@ -70,16 +74,13 @@ Volgende packages dienen te worden geinstalleerd:<br/>
 - tar : voor configuratie visual studio code remote ssh<br/>
 - nano : makkelijke editor<br/>
 
-git config --global user.name "(github username)"<br/>
-git config --global user.email "(github email)"<br/>
+`git config --global user.name "(github username)`<br/>
+`git config --global user.email "(github email)`<br/>
 
-maak ssh certificaat aan via ssh-keygen -
-`ssh-keygen -t ed25519 -C "your_email@example.com"`
-kopieer de publieke sleutel en kopieer naar github settings
-test git connectie: 
-`ssh -T git@github.com`
+Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "your_email@example.com"`<br/>
+kopieer de publieke sleutel en kopieer naar github settings.<br/>
+test git connectie: `ssh -T git@github.com`<br/>
 
-
-vscode extensions:
-- ansible
-- remote-ssh
+vscode extensions:<br/>
+- ansible<br/>
+- remote-ssh<br/>
