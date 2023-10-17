@@ -10,24 +10,25 @@ Playbook voor installatie en configuratie van een development lab server, als ba
 
 Het playbook installeert de volgende rollen:
 
-- RedHat Cockpit<br/>
+- **RedHat Cockpit**<br/>
   Browser-gebaseerde beheeromgeving voor Linux. Toegang via http://<hostname>:9090.<br/>
   Gebruikersnaam en wachtwoord zijn gedefinieerd in all.yml group_vars bestand als lab_username en lab_password.<br/>
+  Zie ook Ansible rol [cockpit](roles/cockpit/README.md)<br/>
 
-- Podman container infrastructure<br/>
+- **Podman container infrastructure**<br/>
   Container infrastructuur. Kan worden beheerd via de Cockpit user interface.<br/>
 
-- Hashicorp Vault<br/>
+- **Hashicorp Vault**<br/>
   Secret management. Geinstalleerd als container, benaderbaar via http://<hostname>:8200.<br/>
   Access token en unseal keys zijn opgeslagen in /data/vault/config folder.<br/>
 
-- Ansible Semaphore<br/>
+- **Ansible Semaphore**<br/>
   Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via http://<hostname>:3000<br/>
 
-- Gogs - Git service<br/>
+- **Gogs - Git service**<br/>
   Geinstalleerd als container, benaderbaar via http://<hostname>:10880.<br/>
 
-- Sonatype Nexus Repository OSS<br/>
+- **Sonatype Nexus Repository OSS**<br/>
   Artifact repository. Geinstalleerd als container, banderbaar via http://<hostname>:8081.<br/>
   User name is admin, initial password is opgeslagen in Vault.<br/>
 
