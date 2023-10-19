@@ -28,7 +28,7 @@ Het playbook installeert de volgende rollen:
   Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
   Zie ook Ansible role [base-server-config](roles/base-server-config/README.md)<br/>
 
- **MySQL**<br/>
+- **MySQL**<br/>
   Installatie en configuratie van MySQL server. UNDER DEVELOPMENT.<br/>
   Zie ook Ansible role [mysql](roles/mysql/README.md)<br/>
 
