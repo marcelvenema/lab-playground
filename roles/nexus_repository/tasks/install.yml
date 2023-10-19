@@ -1,0 +1,233 @@
+---
+
+#########################################################
+## Pre-installation                                    ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  ansible.builtin.assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items: 
+    - repository_url
+
+#########################################################
+## Pre-installation platform check                     ##
+#########################################################
+
+# Gather installed packages
+- name: Gather installed packages
+  ansible.builtin.package_facts:
+    manager: auto
+
+# Override platform check if platform variable is defined.
+- name: Override platform check if platform variable is defined.
+  ansible.builtin.set_fact:
+    platform_check: false
+  when: platform is defined
+
+# Set platform if podman is detected
+- name: Set platform if podman is detected
+  ansible.builtin.set_fact:
+    platform: "podman"
+  when:
+    - platform_check is not defined
+    - '"podman" in ansible_facts.packages'
+
+# Set platform if kubernetes is detected
+- name: Set platform if kubernetes is detected
+  ansible.builtin.set_fact:
+    platform: "kubernetes"
+  when:
+    - platform_check is not defined
+    - '"kubernetes" in ansible_facts.packages'
+
+# Set platform to host if no podman or no kubernetes is detected
+- name: Set platform to host if no Podman or Kubernetes is detected
+  ansible.builtin.set_fact:
+    platform: "host"
+  when:
+    - platform_check is not defined
+    - '"podman" not in ansible_facts.packages'
+    - '"kubernetes" not in ansible_facts.packages'
+
+#########################################################
+## Pre-installation uninstall                          ##
+#########################################################
+
+# Run uninstall if uninstall is set
+- name: Run uninstall playbook if set
+  ansible.builtin.include_tasks: uninstall.yml
+  ignore_errors: true
+  when: uninstall == true
+
+#########################################################
+## Pre-installation folders                            ##
+#########################################################
+
+# Create Sonatype Nexus data folder
+- name: Create Sonatype Nexus data folder
+  ansible.builtin.file:
+    path: /data/nexus/nexus-data
+    state: directory
+    owner: 200
+
+#########################################################
+## Installation                                        ##
+#########################################################
+
+# Display information message
+- name: Display information message
+  ansible.builtin.debug:
+    msg: "Please wait while installing Sonatype Nexus Repository..."
+
+#########################################################
+## Installation on podman                              ##
+#########################################################
+
+- name: Install Nexus repository on podman
+  when: platform == "podman"
+  block:
+
+    ##################################
+    # Import container image         # 
+    ##################################
+
+    # Pull image from repository to local image repository. If failed, lookup local image file.
+    - name: Pull Nexus container image from repository
+      containers.podman.podman_image:
+        name: "{{ repository_url }}"
+      register: pull_result
+      ignore_errors: true
+
+    # repository_url is a local container file, check if file exists
+    - name: Check if repository_url is a local container file
+      ansible.builtin.stat:
+        path: "{{ repository_url }}"
+      register: repository_url_result
+      delegate_to: localhost
+      when: pull_result is failed
+
+    # Fail if image file not found
+    - name: Fail if Nexus container image file not found
+      ansible.builtin.fail:
+        msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
+      when:
+        - pull_result is failed
+        - repository_url_result.stat.exists == false
+
+    # Copy image file to destination
+    - name: Copy Nexus container image file to destination
+      ansible.builtin.copy:
+        src: "{{ repository_url }}"
+        dest: "/tmp/nexus.tar"
+      when: pull_result is failed
+
+    # Load image from file if pull failed
+    - name: Import Nexus container image to podman
+      ansible.builtin.command: podman load -i /tmp/nexus.tar
+      register: import_result
+      when: pull_result is failed
+
+    # Get image info from podman
+    - name: Gather info on Nexus container image
+      containers.podman.podman_image_info:
+        name: nexus3
+      register: image_info_result
+
+    # Get Id from image info
+    - name: Get Id from image info
+      ansible.builtin.set_fact:
+        image_id: "{{ image_info_result.images[0].Id[:12] }}"
+
+    # Cleanup image file
+    - name: Cleanup container image file
+      ansible.builtin.file:
+        path: /tmp/nexus.tar
+        state: absent
+      when: pull_result is failed
+
+    ##################################
+    # Create Nexus container         #
+    ##################################
+
+    # Create Sonatype Nexus container
+    - name: Create Sonatype Nexus container
+      containers.podman.podman_container:
+        name: nexus
+        image: "{{ image_id }}"
+        ports:
+          - 8081:8081
+        volumes:
+          - /data/nexus/nexus-data:/nexus-data:Z
+        restart_policy: always
+
+    # Wait for Sonatype Nexus pod init to complete
+    - name: Wait for Sonatype Nexus pod init to complete
+      ansible.builtin.shell: podman logs nexus | grep "Started Sonatype Nexus OSS"
+      register: nexus_pod_init
+      until: nexus_pod_init.stdout.find("Started Sonatype Nexus OSS") != -1
+      retries: 10
+      delay: 15
+
+    # Auto-start Nexus pod on system boot
+    - name: Generate systemd unit file for Nexus pod
+      containers.podman.podman_generate_systemd:
+        name: nexus
+        new: true
+        no_header: true
+        dest: /etc/systemd/system
+
+#########################################################
+## Installation via kubernetes                         ##
+#########################################################
+
+- name: Install Nexus repository on Kubernetes
+  when: platform == "kubernetes"
+  block:
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Install Sonatype Nexus via kubernetes"
+
+    # Show information message
+    - name: This part is not (yet) implemented.
+      ansible.builtin.debug:
+        msg: "This part is not (yet) implemented."
+
+    # Stop playbook
+    - name: Stop playbook
+      ansible.builtin.meta: end_play
+
+#########################################################
+## Installation on host                                ##
+#########################################################
+
+- name: Install Nexus repository on host
+  when: platform == "host"
+  block:
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Install Sonatype Nexus on host"
+
+    # Show information message
+    - name: This part is not (yet) implemented.
+      ansible.builtin.debug:
+        msg: "This part is not (yet) implemented."
+
+    # Stop playbook
+    - name: Stop playbook
+      ansible.builtin.meta: end_play
+
+#########################################################
+## Configuration                                       ##
+#########################################################
+
+# Configure Sonatype Nexus
+- name: Configure Sonatype Nexus
+  ansible.builtin.include_tasks: configure.yml 

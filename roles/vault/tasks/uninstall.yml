@@ -1,24 +1,24 @@
 ---
 
 #########################################################
-## Uninstall                                           ##
+## Uninstall configuration                             ##
 #########################################################
 
 # Remove Vault config folder
 - name: Remove Hashicorp Vault config folder
-  file:
+  ansible.builtin.file:
     path: /data/vault/config
     state: absent
 
 # Remove Vault data folder
 - name: Remove Hashicorp Vault storage folder
-  file:
+  ansible.builtin.file:
     path: /data/vault/file
     state: absent
 
 # Remove Vault log folder
 - name: Remove Hashicorp Vault log folder
-  file:
+  ansible.builtin.file:
     path: /data/vault/logs
     state: absent
 
@@ -26,12 +26,12 @@
 ## Uninstall via podman                                ##
 #########################################################
 
-- block:
-
-  # Remove Hashicorp Vault pod
-  - name: Remove Hashicorp Vault pod
-    containers.podman.podman_container:
-      name: vault
-      state: absent
-
+- name: Uninstall via podman
   when: platform == "podman"
+  block:
+  
+    # Remove Hashicorp Vault pod
+    - name: Remove Hashicorp Vault pod
+      containers.podman.podman_container:
+        name: vault
+        state: absent

@@ -6,13 +6,13 @@
 
 # Validate variables
 - name: Validate variables for action.
-  assert:
+  ansible.builtin.assert:
     that: "{{ varitem }} is defined"
     fail_msg: "Required variable '{{ varitem }}' has not been provided."
     quiet: true
   loop_control:
     loop_var: varitem
-  loop: 
+  loop:
     - vault_address
 
 # Check if Vault is sealed
@@ -23,7 +23,7 @@
 #   501 if not initialized
 #   503 if sealed
 - name: Check if vault is sealed
-  uri:
+  ansible.builtin.uri:
     url: "{{ vault_address }}/v1/sys/health"
     validate_certs: false
     status_code: 200,429,472,501,503
@@ -31,9 +31,9 @@
 
 # Unseal Vault
 - name: Unseal Vault
-  uri:
+  ansible.builtin.uri:
     url: "{{ vault_address }}/v1/sys/unseal"
-    validate_certs: false 
+    validate_certs: false
     method: PUT
     body:
       key: "{{ item }}"
@@ -42,6 +42,6 @@
   with_items:
     - "{{ vault_unseal_keys }}"
   when:
-        - vault_health_response.status == 503
-        - vault_health_response.status != 501
-        - vault_unseal_keys is defined
+    - vault_health_response.status == 503
+    - vault_health_response.status != 501
+    - vault_unseal_keys is defined

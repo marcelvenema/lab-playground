@@ -6,7 +6,7 @@
 
 # Validate variables
 - name: Validate variables for action.
-  assert:
+  ansible.builtin.assert:
     that: "{{ varitem }} is defined"
     fail_msg: "Required variable '{{ varitem }}' has not been provided."
     quiet: true
@@ -17,7 +17,7 @@
 
 # Check if Hashicorp Vault is not initialized via api, get content string and register as vault_init_status
 - name: Check if Vault is not initialized via api
-  uri:
+  ansible.builtin.uri:
     url: "{{ vault_address }}/v1/sys/init"
     validate_certs: false # TODO
     method: GET
@@ -27,7 +27,7 @@
 
 # Get content string from response
 - name: Get content string from response
-  set_fact:
+  ansible.builtin.set_fact:
     vault_init_status: "{{ vault_init_status.content }}"
 
 #########################################################
@@ -36,7 +36,7 @@
 
 # Initialize Vault 
 - name: Initialize Vault server
-  uri:
+  ansible.builtin.uri:
     url: "{{ vault_address }}/v1/sys/init"
     validate_certs: false
     method: POST
@@ -49,14 +49,14 @@
   
 # Save Vault root token and unseal keys
 - name: Save Vault root token and unseal keys
-  set_fact:
+  ansible.builtin.set_fact:
     vault_token: "{{ vault_init_results.json.root_token }}"
     vault_unseal_keys: "{{ vault_init_results.json.keys_base64 }}"
   when: vault_init_status.initialized == false
 
 # Save Vault root token to file
 - name: Save Vault root token to file
-  copy:
+  ansible.builtin.copy:
     content: "{{ vault_token }}"
     dest: /data/vault/config/vault_token
     owner: vault
@@ -66,7 +66,7 @@
 
 # Save Vault unseal keys to file
 - name: Save Vault unseal keys to file
-  copy:
+  ansible.builtin.copy:
     content: "{{ vault_unseal_keys }}"
     dest: /data/vault/config/vault_unseal_keys
     owner: vault
@@ -76,11 +76,11 @@
 
 # Unseal Vault
 - name: Unseal Vault
-  include_tasks: unseal.yml
+  ansible.builtin.include_tasks: unseal.yml
 
 # Enable Vault AppRole
 - name: Enable Hashicorp Vault AppRole
-  uri:
+  ansible.builtin.uri:
     url: "{{ vault_address }}/v1/sys/auth/approle"
     validate_certs: false 
     method: POST

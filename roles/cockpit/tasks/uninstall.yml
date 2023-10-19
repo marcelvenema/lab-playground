@@ -6,19 +6,19 @@
 
 # Stop Cockpit service
 - name: Stop Cockpit service
-  systemd:
+  ansible.builtin.systemd:
     name: cockpit.socket
     state: stopped
-    enabled: no
+    enabled: false
 
 # Delete Cockpit configuration
 - name: Delete Cockpit configuration
-  file:
+  ansible.builtin.file:
     path: /etc/cockpit
     state: absent
 
 # Remove Cockpit package
 - name: Remove Cockpit package
-  package:
+  ansible.builtin.package:
     name: cockpit
     state: absent

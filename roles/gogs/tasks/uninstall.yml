@@ -1,0 +1,17 @@
+---
+
+#########################################################
+## Uninstall                                           ##
+#########################################################
+
+# Remove Gogs folder
+- name: Remove Gogs folder
+  ansible.builtin.file:
+    path: /data/gogs
+    state: absent
+
+# Remove Gogs pod
+- name: Remove gogs git pod
+  containers.podman.podman_container:
+    name: gogs
+    state: absent

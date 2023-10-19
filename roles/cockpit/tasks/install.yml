@@ -6,7 +6,7 @@
 
 # Check if cockpit service is running
 - name: Check if Cockpit service is running
-  systemd:
+  ansible.builtin.systemd:
     name: cockpit.socket
   register: cockpit_service_status
   changed_when: false
@@ -15,7 +15,7 @@
 
 # Run uninstall if service is running
 - name: Run uninstall playbook if Cockpit service is running
-  include_tasks: uninstall.yml
+  ansible.builtin.include_tasks: uninstall.yml
   when: cockpit_service_status.status == 'running'
 
 #########################################################
@@ -24,20 +24,20 @@
 
 # Install cockpit packages
 - name: Install Cockpit packages
-  package:
+  ansible.builtin.package:
     name:
       - cockpit
     state: present
 
 # Check if Podman is installed
 - name: Check if Podman is installed
-  command: podman --version
+  ansible.builtin.command: podman --version
   register: podman_version_output
   ignore_errors: true
 
 # Install Cockpit Podman packages
 - name: Install Cockpit Podman packages
-  package:
+  ansible.builtin.package:
     name:
       - cockpit-podman
     state: present
@@ -45,7 +45,7 @@
 
 # Install Cockpit KVM packages
 - name: Install Cockpit KVM packages
-  package:
+  ansible.builtin.package:
     name:
       - cockpit-machines
     state: present
@@ -53,18 +53,18 @@
 
 # Enable Cockpit service
 - name: Enable Cockpit service
-  systemd:
+  ansible.builtin.systemd:
     name: cockpit.socket
     state: started
-    enabled: yes
+    enabled: true
 
 # Enable Cockpit firewall
 - name: Allow Cockpit through firewall
-  firewalld:
+  ansible.posix.firewalld:
     service: cockpit
-    permanent: yes
+    permanent: true
     state: enabled
-    immediate: yes
+    immediate: true
 
 #########################################################
 ## Configuration                                       ##
@@ -72,4 +72,4 @@
 
 # Configure Cockpit
 - name: Configure
-  include_tasks: configure.yml
+  ansible.builtin.include_tasks: configure.yml

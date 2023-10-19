@@ -4,16 +4,13 @@
 ## Configuration                                       ##
 #########################################################
 
-
-
 #########################################################
 ## Configure Vault                                     ##
 #########################################################
 
 # Configure Vault for MySQL if Vault is present
 - name: Configure Vault for MySQL
-  include_tasks: configure_vault.yml
+  ansible.builtin.include_tasks: configure_vault.yml
   when:
     - vault_address is defined
     - vault_token is defined
-    

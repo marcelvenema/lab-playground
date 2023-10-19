@@ -34,16 +34,16 @@ Het playbook installeert de volgende rollen:
 
 - **Ansible Semaphore**<br/>
   Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via `http://<hostname>:3000`.<br/>
-  Zie ook Ansible role [podman.semaphore](roles/podman.semaphore/README.md)<br/>
+  Zie ook Ansible role [semaphore](roles/semaphore/README.md)<br/>
 
 - **Gogs - Git service**<br/>
   Geinstalleerd als container, benaderbaar via `http://<hostname>:10880`.<br/>
-  Zie ook Ansible role [podman.gogs](roles/podman.gogs/README.md)<br/>
+  Zie ook Ansible role [gogs](roles/gogs/README.md)<br/>
 
 - **Sonatype Nexus Repository OSS**<br/>
   Artifact repository. Geinstalleerd als container, benaderbaar via `http://<hostname>:8081`.<br/>
   User name is admin, initial password is opgeslagen in Vault.<br/>
-  Zie ook Ansible role [nexus.repository](roles/nexus.repository/README.md)<br/>
+  Zie ook Ansible role [nexus_repository](roles/nexus_repository/README.md)<br/>
 
 
 ***

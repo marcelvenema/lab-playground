@@ -1,0 +1,221 @@
+---
+
+#########################################################
+## Pre-installation                                    ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  ansible.builtin.assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items: 
+    - repository_url
+
+#########################################################
+## Pre-installation platform check                     ##
+#########################################################
+
+# Gather installed packages
+- name: Gather installed packages
+  ansible.builtin.package_facts:
+    manager: auto
+
+# Override platform check if platform variable is defined.
+- name: Override platform check if platform variable is defined.
+  ansible.builtin.set_fact:
+    platform_check: false
+  when: platform is defined
+
+# Set platform if podman is detected
+- name: Set platform if podman is detected
+  ansible.builtin.set_fact:
+    platform: "podman"
+  when:
+    - platform_check is not defined
+    - '"podman" in ansible_facts.packages'
+
+# Set platform if kubernetes is detected
+- name: Set platform if kubernetes is detected
+  ansible.builtin.set_fact:
+    platform: "kubernetes"
+  when:
+    - platform_check is not defined
+    - '"kubernetes" in ansible_facts.packages'
+
+# Set platform to host if no podman or no kubernetes is detected
+- name: Set platform to host if no Podman or Kubernetes is detected
+  ansible.builtin.set_fact:
+    platform: "host"
+  when:
+    - platform_check is not defined
+    - '"podman" not in ansible_facts.packages'
+    - '"kubernetes" not in ansible_facts.packages'
+
+#########################################################
+## Pre-installation uninstall                          ##
+#########################################################
+
+# Check if Gogs pod is present, if so remove it
+- name: Check if Gogs pod is present
+  containers.podman.podman_container_info:
+    name: gogs
+  register: gogs_pod_info
+  ignore_errors: true
+
+# Run uninstall if Gogs pod is present
+- name: Run uninstall if Gogs pod is present
+  ansible.builtin.include_tasks: uninstall.yml
+  when: gogs_pod_info is defined
+
+#########################################################
+## Pre-installation folders                            ##
+#########################################################
+
+# Create Gogs folder
+- name: Create Gogs config folder
+  ansible.builtin.file:
+    path: /data/gogs
+    state: directory
+    mode: '0755'
+
+#########################################################
+## Installation                                        ##
+#########################################################
+
+#########################################################
+## Installation on podman                              ##
+#########################################################
+
+- name: Install gogs on podman
+  when: platform == "podman"
+  block:
+
+    ##################################
+    # Import container image         # 
+    ##################################
+
+    # Pull image from repository to local image repository. If failed, lookup local image file.
+    - name: Pull Gogs container image from repository
+      containers.podman.podman_image:
+        name: "{{ repository_url }}"
+      register: pull_result
+      ignore_errors: true
+
+    # repository_url is a local container file, check if file exists
+    - name: Check if repository_url is a local container file
+      ansible.builtin.stat:
+        path: "{{ repository_url }}"
+      register: repository_url_result
+      delegate_to: localhost
+      when: pull_result is failed
+
+    # Fail if image file not found
+    - name: Fail if Gogs container image file not found
+      fail:
+        msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
+      when: 
+        - pull_result is failed
+        - repository_url_result.stat.exists is not defined
+
+    # Copy image file to destination
+    - name: Copy Gogs container image file to destination
+      ansible.builtin.copy:
+        src: "{{ repository_url }}"
+        dest: "/tmp/gogs.tar"
+        mode: '0644'
+      when: pull_result is failed
+
+    # Load image from file if pull failed
+    - name: Import Gogs container image to podman
+      ansible.builtin.command: podman load -i /tmp/gogs.tar
+      register: import_result
+      when: pull_result is failed
+
+    # Get image info from podman
+    - name: Gather info on Gogs container image
+      containers.podman.podman_image_info:
+        name: gogs
+      register: image_info_result
+
+    # Get Id from image info
+    - name: Get Id from image info
+      ansible.builtin.set_fact:
+        image_id: "{{ image_info_result.images[0].Id[:12] }}"
+
+    # Cleanup image file
+    - name: Cleanup container image file
+      ansible.builtin.file:
+        path: /tmp/gogs.tar
+        state: absent
+      when: pull_result is failed
+
+    ##################################
+    # Create Gogs container          #
+    ##################################
+
+    # Create Gogs pod
+    - name: Create Gogs git pod
+      containers.podman.podman_container:
+        name: gogs
+        image: "{{ image_id }}"
+        ports:
+          - 10022:0022
+          - 10880:3000
+        volumes:
+          - /data/gogs:/data:Z
+        restart_policy: always
+        state: started
+
+    # Auto-start Gogs pod on boot
+    - name: Generate systemd unit file for Gogs pod
+      containers.podman.podman_generate_systemd:
+        name: gogs
+        new: true
+        no_header: true
+        dest: /etc/systemd/system
+
+#########################################################
+## Installation on kubernetes                          ##
+#########################################################
+
+- name: Install gogs on kubernetes
+  when: platform == "kubernetes"
+  block:
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Install Gogs via kubernetes"
+  
+    # Show information message
+    - name: This part is not (yet) implemented.
+      ansible.builtin.debug:
+        msg: "This part is not (yet) implemented."
+
+    # Stop playbook
+    - name: Stop playbook
+      ansible.builtin.meta: end_play
+
+#########################################################
+## Installation on host                                ##
+#########################################################
+
+- name: Install gogs on host
+  when: platform == "host"
+  block:
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Install Gogs on host"
+  
+    # Show information message
+    - name: This part is not (yet) implemented.
+      ansible.builtin.debug:
+        msg: "This part is not (yet) implemented."
+
+    # Stop playbook
+    - name: Stop playbook
+      ansible.builtin.meta: end_play

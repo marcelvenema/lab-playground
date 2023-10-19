@@ -5,8 +5,10 @@
 #
 #
 
-- hosts: lab_server
+- name: Install Lab Playground server
+  hosts: lab_server
   vars:
+    # if uninstall is true, roles will be uninstalled first before installation.
     uninstall: true
     automation_username: ansible
     automation_email: "ansible@marcelvenema.com"
@@ -15,7 +17,7 @@
     lab_email: "marcel@marcelvenema.com"
 
   roles:
-    - role: base-server-config
+    - role: base_server_config
       become: true
       vars:
         action: configure
@@ -36,16 +38,16 @@
       gather_facts: true  
       vars:
         action: install
- 
+
     - role: vault
       become: true
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/hashicorp/vault or /tmp/vault_<version>.tar
         repository_url: "docker.io/hashicorp/vault"
-        #repository_url: "/repository/vault_1.15.0.tar"
+        # repository_url: "/repository/vault_1.15.0.tar"
 
-    - role: base-server-config
+    - role: base_server_config
       become: true
       gather_facts: true
       vars:
@@ -62,7 +64,7 @@
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
-    - role: podman.ansible_semaphore
+    - role: semaphore
       become: true
       vars:
         action: install
@@ -73,7 +75,7 @@
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
-    - role: podman.gogs
+    - role: gogs
       become: true
       vars:
         action: install
@@ -81,7 +83,7 @@
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
-    - role: nexus.repository
+    - role: nexus_repository
       become: true
       vars:
         action: install

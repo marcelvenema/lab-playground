@@ -6,43 +6,52 @@
 
 # Validate variables
 - name: Validate variables for action.
-  assert:
+  ansible.builtin.assert:
     that: "{{ item }} is defined"
     fail_msg: "Required variable '{{ item }}' has not been provided."
     quiet: true
-  with_items: 
+  with_items:
     - repository_url
 
 #########################################################
 ## Pre-installation platform check                     ##
 #########################################################
 
+# Gather installed packages
+- name: Gather installed packages
+  ansible.builtin.package_facts:
+    manager: auto
+
 # Override platform check if platform variable is defined.
 - name: Override platform check if platform variable is defined.
-  set_fact:
+  ansible.builtin.set_fact:
     platform_check: false
   when: platform is defined
 
-# Check if Podman is installed
-- name: Check if Podman is installed
-  command: podman --version
-  register: podman_version_output
-  ignore_errors: true
-  when: platform_check is not defined
-
-# Set platform if Podman is detected
-- name: Set platform if Podman is detected
-  set_fact:
+# Set platform if podman is detected
+- name: Set platform if podman is detected
+  ansible.builtin.set_fact:
     platform: "podman"
-  when: 
+  when:
     - platform_check is not defined
-    - '"podman" in podman_version_output.stdout'
+    - '"podman" in ansible_facts.packages'
 
-# Check if kubernetes is installed
-# TODO
+# Set platform if kubernetes is detected
+- name: Set platform if kubernetes is detected
+  ansible.builtin.set_fact:
+    platform: "kubernetes"
+  when:
+    - platform_check is not defined
+    - '"kubernetes" in ansible_facts.packages'
 
-# If no podman or kubernetes is detected, use install on host
-# TODO
+# Set platform to host if no podman or no kubernetes is detected
+- name: Set platform to host if no Podman or Kubernetes is detected
+  ansible.builtin.set_fact:
+    platform: "host"
+  when:
+    - platform_check is not defined
+    - '"podman" not in ansible_facts.packages'
+    - '"kubernetes" not in ansible_facts.packages'
 
 #########################################################
 ## Pre-installation uninstall                          ##
@@ -50,7 +59,7 @@
 
 # Run uninstall if uninstall is set
 - name: Run uninstall playbook if set
-  include_tasks: uninstall.yml
+  ansible.builtin.include_tasks: uninstall.yml
   ignore_errors: true
   when: uninstall == true
 
@@ -60,9 +69,10 @@
 
 # Create MySQL data folder
 - name: Create MySQL data folder
-  file:
+  ansible.builtin.file:
     path: /data/mysql/data
     state: directory
+    mode: '0755'
 
 #########################################################
 ## Pre-installation users/groups                       ##
@@ -70,151 +80,150 @@
 
 # Set random password
 - name: Set MySQL root password
-  set_fact:
+  ansible.builtin.set_fact:
     mysql_root_password: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters,digits') }}"
   no_log: true
 
 #########################################################
-## Installation via podman                             ##
+## Installation on podman                              ##
 #########################################################
 
-- block:
-
-  ##################################
-  # Import container image         # 
-  ##################################
-
-  # Pull image from repository to local image repository. If failed, lookup local image file.
-  - name: Pull MySQL container image from repository
-    containers.podman.podman_image:
-      name: "{{ repository_url }}"
-    register: pull_result
-    ignore_errors: true
-
-  # repository_url is a local container file, check if file exists
-  - name: Check if repository_url is a local container file
-    stat:
-      path: "{{ repository_url }}"
-    register: repository_url_result
-    delegate_to: localhost
-    when: pull_result is failed
-
-  # Fail if image file not found
-  - name: Fail if MySQL container image file not found
-    fail:
-      msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
-    when: 
-      - pull_result is failed
-      - repository_url_result.stat.exists == false
-
-  # Copy image file to destination
-  - name: Copy MySQL container image file to destination
-    copy:
-      src: "{{ repository_url }}"
-      dest: "/tmp/mysql.tar"
-    when: pull_result is failed
-
-  # Load image from file if pull failed
-  - name: Import MySQL container image to podman
-    shell: podman load -i /tmp/mysql.tar
-    register: import_result
-    when: pull_result is failed
-
-  # Get image info from podman
-  - name: Gather info on MySQL container image
-    containers.podman.podman_image_info:
-      name: mysql-server
-    register: image_info_result
-
-  # Get Id from image info
-  - name: Get Id from image info
-    set_fact:
-      image_id: "{{ image_info_result.images[0].Id[:12] }}"
-
-  # Cleanup image file
-  - name: Cleanup container image file
-    file:
-      path: /tmp/mysql.tar
-      state: absent
-    when: pull_result is failed
-
-  ##################################
-  # Create MySQL container         # 
-  ##################################
-
-  # Create MySQL pod
-  - name: Create MySQL pod
-    containers.podman.podman_container:
-      name: mysql
-      image: "{{ image_id }}"
-      ports:
-        - 3306:3306
-      volumes:
-        - /data/mysql/data/:/var/lib/mysql:Z
-      restart_policy: always
-      env:
-        MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
-
-  # Auto-start MySQL pod on system boot
-  - name: Generate systemd unit file for MySQL pod
-    containers.podman.podman_generate_systemd:
-      name: mysql
-      new: true
-      no_header: true
-      dest: /etc/systemd/system
-
-
+- name: Install MySQL on podman
   when: platform == "podman"
+  block:
 
-#########################################################
-## Installation via kubernetes                         ##
-#########################################################
+    ##################################
+    # Import container image         # 
+    ##################################
 
-- block:
+    # Pull image from repository to local image repository. If failed, lookup local image file.
+    - name: Pull MySQL container image from repository
+      containers.podman.podman_image:
+        name: "{{ repository_url }}"
+      register: pull_result
+      ignore_errors: true
 
-  # Debug message
-  - name: Debug message
-    debug:
-      msg: "Install MySQL via kubernetes"
+    # repository_url is a local container file, check if file exists
+    - name: Check if repository_url is a local container file
+      ansible.builtin.stat:
+        path: "{{ repository_url }}"
+      register: repository_url_result
+      delegate_to: localhost
+      when: pull_result is failed
+
+    # Fail if image file not found
+    - name: Fail if MySQL container image file not found
+      fail:
+        msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
+      when: 
+        - pull_result is failed
+        - repository_url_result.stat.exists == false
+
+    # Copy image file to destination
+    - name: Copy MySQL container image file to destination
+      ansible.builtin.copy:
+        src: "{{ repository_url }}"
+        dest: "/tmp/mysql.tar"
+        mode: '0644'
+      when: pull_result is failed
+
+    # Load image from file if pull failed
+    - name: Import MySQL container image to podman
+      ansible.builtin.command: podman load -i /tmp/mysql.tar
+      register: import_result
+      when: pull_result is failed
+
+    # Get image info from podman
+    - name: Gather info on MySQL container image
+      containers.podman.podman_image_info:
+        name: mysql-server
+      register: image_info_result
+
+    # Get Id from image info
+    - name: Get Id from image info
+      ansible.builtin.set_fact:
+        image_id: "{{ image_info_result.images[0].Id[:12] }}"
+
+    # Cleanup image file
+    - name: Cleanup container image file
+      ansible.builtin.file:
+        path: /tmp/mysql.tar
+        state: absent
+      when: pull_result is failed
+
+    ##################################
+    # Create MySQL container         #
+    ##################################
+
+    # Create MySQL pod
+    - name: Create MySQL pod
+      containers.podman.podman_container:
+        name: mysql
+        image: "{{ image_id }}"
+        ports:
+          - 3306:3306
+        volumes:
+          - /data/mysql/data/:/var/lib/mysql:Z
+        restart_policy: always
+        env:
+          MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+
+    # Auto-start MySQL pod on system boot
+    - name: Generate systemd unit file for MySQL pod
+      containers.podman.podman_generate_systemd:
+        name: mysql
+        new: true
+        no_header: true
+        dest: /etc/systemd/system/podman-mysql.service
   
-  # Show information message
-  - name: This part is not (yet) implemented.
-    debug:
-      msg: "This part is not (yet) implemented."
+#########################################################
+## Installation MySQL on kubernetes                    ##
+#########################################################
 
-  # Stop playbook
-  - name: Stop playbook
-    meta: end_play
-
+- name: Install MySQL on kubernetes
   when: platform == "kubernetes"
+  block:
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Install MySQL via kubernetes"
+  
+    # Show information message
+    - name: This part is not (yet) implemented.
+      ansible.builtin.debug:
+        msg: "This part is not (yet) implemented."
+
+    # Stop playbook
+    - name: Stop playbook
+      ansible.builtin.meta: end_play 
 
 #########################################################
 ## Installation on host                                ##
 #########################################################
 
-- block:
-
-  # Debug message
-  - name: Debug message
-    debug:
-      msg: "Install MySQL on host"
-  
-  # Show information message
-  - name: This part is not (yet) implemented.
-    debug:
-      msg: "This part is not (yet) implemented."
-
-  # Stop playbook
-  - name: Stop playbook
-    meta: end_play
-
+- name: Install MySQL on host
   when: platform == "host"
+  block:
 
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Install MySQL on host"
+
+    # Show information message
+    - name: This part is not (yet) implemented.
+      ansible.builtin.debug:
+        msg: "This part is not (yet) implemented."
+
+    # Stop playbook
+    - name: Stop playbook
+      ansible.builtin.meta: end_play
+ 
 #########################################################
 ## Configuration                                       ##
 #########################################################
 
 # Configure MySQL
 - name: Configure MySQL
-  include_tasks: configure.yml 
-
+  ansible.builtin.include_tasks: configure.yml

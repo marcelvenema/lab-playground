@@ -6,19 +6,20 @@
 
 # Copy banner to Cockpit configuration folder
 - name: Copy banner to Cockpit configuration folder
-  copy:
+  ansible.builtin.copy:
     src: ./media/banner_cockpit.txt
     dest: /etc/cockpit/banner
+    mode: '0644'
 
 # Add custom logo to Cockpit login page
 - name: Add custom logo to Cockpit login page
-  copy:
-   src: ./media/logo_cockpit.png
-   dest: /usr/share/cockpit/branding/rhel/logo.png
-   backup: true 
+  ansible.builtin.copy:
+    src: ./media/logo_cockpit.png
+    dest: /usr/share/cockpit/branding/rhel/logo.png
+    mode: '0644'
 
 # Restart Cockpit service
 - name: Restart Cockpit service
-  systemd:
+  ansible.builtin.systemd:
     name: cockpit.socket
     state: restarted

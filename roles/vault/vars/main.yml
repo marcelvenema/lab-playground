@@ -7,6 +7,8 @@ actions:
   - uninstall
   # configure vault, create token and unseal keys, unseal vault
   - configure
+  # update vault in podman, k3s, or host
+  - update
   # ----------------------------------------
   # get secret engine
   - get_secret_engine
@@ -36,10 +38,13 @@ actions:
   # destroy approle
   - destroy_approle
   # ----------------------------------------
+  - import_secrets
+  - export_secrets
+  # ----------------------------------------
   # unseal vault
   - unseal
 
 rolevars:
   - vault_address
   - vault_token
-  
+ 

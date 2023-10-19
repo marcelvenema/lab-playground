@@ -6,11 +6,11 @@
 
 # Store usernames and passwords in Hashicorp Vault.
 - name: Store MySQL usernames and passwords in Vault
-  include_role: 
+  ansible.builtin.include_role:
     name: vault
     tasks_from: secrets.yml
   vars:
     action: create_secret
-    vault_name: "{{ ansible_fqdn | replace('.','-')}}"
+    vault_name: "{{ ansible_fqdn | replace('.', '-') }}"
     secret_name: "MySQL"
     secret_keyvalue: "{ 'mysql_root_password': '{{ mysql_root_password }}' }"

@@ -1,0 +1,26 @@
+--- 
+
+- name: Set wait
+  ansible.builtin.set_fact:
+    wait: false
+  when: wait is not defined
+
+- name: Verify variable input
+  ansible.builtin.assert:
+    that:
+      - action is defined and action in actions
+    fail_msg: "Please provide 'action' {{ actions }}"
+    quiet: true
+
+- name: Install
+  ansible.builtin.include_tasks: install.yml
+  when: action == "install"
+
+- name: Uninstall
+  ansible.builtin.include_tasks: uninstall.yml
+  when: action == "uninstall"
+
+- name: Configure
+  ansible.builtin.include_tasks: configure.yml
+  when: action == "configure"
+  

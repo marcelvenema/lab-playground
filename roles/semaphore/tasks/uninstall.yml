@@ -1,0 +1,34 @@
+---
+
+#########################################################
+## Uninstall                                           ##
+#########################################################
+
+# Remove Semaphore config folder
+- name: Remove Semaphore config folder
+  ansible.builtin.file:
+    path: /data/semaphore/config
+    state: absent
+
+# Remove Semaphore data folder
+- name: Remove Semaphore data folder
+  ansible.builtin.file:
+    path: /data/semaphore/data
+    state: absent
+
+# Remove Semaphore container
+- name: Remove Semaphore container
+  containers.podman.podman_container:
+    name: semaphore
+    state: absent
+
+# Remove MySQL container
+- name: Remove MySQL container
+  containers.podman.podman_container:
+    name: mysql
+    state: absent
+
+# Remove Ansible pod
+- name: Remove Ansible pod
+  ansible.builtin.command: podman pod rm ansible -f
+    

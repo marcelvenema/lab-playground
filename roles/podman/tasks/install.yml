@@ -4,26 +4,27 @@
 ## Pre-installation                                    ##
 #########################################################
 
+# Gather installed packages
+- name: Gather installed packages
+  ansible.builtin.package_facts:
+    manager: auto
+
 # Check if Podman is installed
-- name: Check if Podman is installed
-  command: podman --version
-  register: podman_version_output
-  ignore_errors: true
-
-# If error, display debug message
-- name: Display information message
-  debug:
+- name: Check if Podman container infrastructure is present
+  ansible.builtin.debug:
     msg: "Podman is not installed. Please wait while installing Podman prerequisites..."
-  when: '"podman" not in podman_version_output.stdout'
+  when: '"podman" not in ansible_facts.packages'
 
-# Run uninstall if Podman is installed
+# Run uninstall if Podman is installed and uninstall is set
 - name: Run uninstall playbook if Podman is installed
-  include_tasks: uninstall.yml
-  when: '"podman" in podman_version_output.stdout'
+  ansible.builtin.include_tasks: uninstall.yml
+  when: 
+    - '"podman" in ansible_facts.packages'
+    - uninstall == true
 
 # Install Podman prerequisites
 - name: Install Podman prerequisites
-  package:
+  ansible.builtin.package:
     name:
       - yum-utils
       - device-mapper-persistent-data
@@ -36,7 +37,7 @@
 
 # Install Podman on server
 - name: Install Podman on RHEL
-  package:
+  ansible.builtin.package:
     name: podman
     state: present
   when: ansible_os_family == "RedHat"
@@ -44,7 +45,7 @@
 # install Podman on server  
 # TODO error check/test    
 - name: Install Podman on Ubuntu
-  apt:
+  ansible.builtin.apt:
     name: podman
     update_cache: yes
     state: present
@@ -52,7 +53,7 @@
 
 # Start Podman on boot
 - name: Start podman on boot
-  service:
+  ansible.builtin.service:
     name: podman
     enabled: yes
     state: started
@@ -63,4 +64,4 @@
 
 # Configure Podman
 - name: Configure
-  include_tasks: configure.yml
+  ansible.builtin.include_tasks: configure.yml

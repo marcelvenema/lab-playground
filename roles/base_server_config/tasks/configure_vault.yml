@@ -1,0 +1,57 @@
+---
+
+#########################################################
+## Vault module                                        ##
+#########################################################
+
+#########################################################
+## Pre-Configuration                                   ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  ansible.builtin.assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items:
+    - vault_address
+    - vault_token
+    - admin_hostname
+
+#########################################################
+## Configuration                                       ##
+#########################################################
+
+# Clear variable, be sure it is not used from a previous run.
+- name: Clear variable vault_name
+  ansible.builtin.set_fact:
+    vault_name: ""
+  no_log: true
+
+# Clear variable, be sure it is not used from a previous run.
+- name: Clear variable vault_description
+  ansible.builtin.set_fact:
+    vault_description: ""
+  no_log: true
+
+# Create secret engine
+- name: Create secret engine
+  ansible.builtin.include_role:
+    name: vault
+    tasks_from: secret_engine.yml
+  vars:
+    action: create_secret_engine
+    vault_name: "{{ ansible_fqdn | replace('.', '-') }}"
+    vault_description: "Secrets for {{ ansible_fqdn }}"
+
+# Store usernames and passwords in Hashicorp Vault.
+- name: "Store {{ ansible_fqdn }} usernames and passwords in Vault"
+  ansible.builtin.include_role:
+    name: vault
+    tasks_from: secrets.yml
+  vars:
+    action: create_secret
+    vault_name: "{{ ansible_fqdn | replace('.', '-') }}"
+    secret_name: "{{ ansible_fqdn | replace('.', '-') }}"
+    secret_keyvalue: "{ 'admin_username': '{{ admin_username }}', 'admin_password': '{{ admin_password }}', 'admin_email': '{{ admin_email }}' }"
