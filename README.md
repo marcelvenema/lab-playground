@@ -28,6 +28,10 @@ Het playbook installeert de volgende rollen:
   Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
   Zie ook Ansible role [base-server-config](roles/base-server-config/README.md)<br/>
 
+ **MySQL**<br/>
+  Installatie en configuratie van MySQL server. UNDER DEVELOPMENT.<br/>
+  Zie ook Ansible role [mysql](roles/mysql/README.md)<br/>
+
 - **Ansible Semaphore**<br/>
   Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via `http://<hostname>:3000`.<br/>
   Zie ook Ansible role [podman.semaphore](roles/podman.semaphore/README.md)<br/>
@@ -39,16 +43,16 @@ Het playbook installeert de volgende rollen:
 - **Sonatype Nexus Repository OSS**<br/>
   Artifact repository. Geinstalleerd als container, benaderbaar via `http://<hostname>:8081`.<br/>
   User name is admin, initial password is opgeslagen in Vault.<br/>
-  Zie ook Ansible role [nexus](roles/nexus/README.md)<br/>
+  Zie ook Ansible role [nexus.repository](roles/nexus.repository/README.md)<br/>
 
 
 ***
 
 # Voorbereidingen
 
-Controleer de variabelen in het `inventory/lab/group_vars/all.yml` bestand en wijzig deze zonodig.<br/>
-Controleer de ip-adressen in het `inventory/lab/hosts.ini` bestand en wijzig deze zonodig.<br/> 
-Installeer Ansible Galaxy collections via `sh requirements.sh`<br/>
+Controleer de variabelen in het `inventory/lab/group_vars/all.yml` bestand en wijzig deze indien nodig.<br/>
+Controleer de ip-adressen in het `inventory/lab/hosts.ini` bestand en wijzig deze indien nodig.<br/> 
+Installeer Ansible Galaxy collections via `sh requirements.sh`.<br/>
 
 # Installatie
 

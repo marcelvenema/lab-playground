@@ -58,7 +58,7 @@
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/mysql/mysql-server or /tmp/mysql_<version>.tar
-        repository_url: "docker.io/mysql"
+        repository_url: "docker.io/mysql/mysql-server"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>                                      not neccecary if vault is installed on the same server
 
