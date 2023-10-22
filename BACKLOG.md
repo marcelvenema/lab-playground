@@ -11,7 +11,7 @@
 - Role wordt nu geinstalleerd, verdere configuratie gewenst.
 
 
-## Role nexus.repository
+## Role nexus_repository
 - Ansible task / powershell / bash script voor import van artifacts in repository. action import_artifacts.
 - Ansible task / powershell / bash script voor export van artifacts naar disk. action export_artifacts.
 - Ansible task / powershell / bash script voor synchronisatie artifacts tussen repositories. action sync_artifacts.

@@ -180,6 +180,18 @@
         no_header: true
         dest: /etc/systemd/system
 
+    # Reload systemd
+    - name: Reload systemd
+      ansible.builtin.systemd_service:
+        daemon_reload: yes
+        scope: system
+    
+    # Enable systemd service for Nexus container
+    - name: Enable systemd service for Nexus container
+      ansible.builtin.service:
+        name: container-nexus.service
+        enabled: yes
+
 #########################################################
 ## Installation via kubernetes                         ##
 #########################################################

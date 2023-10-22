@@ -64,28 +64,6 @@
   when: uninstall == true
 
 #########################################################
-## Pre-installation folders                            ##
-#########################################################
-
-# Create Hashicorp Vault config folder
-- name: Create Hashicorp Vault config folder
-  ansible.builtin.file:
-    path: /data/vault/config
-    state: directory
-
-# Create Hashicorp Vault storage folder
-- name: Create Hashicorp Vault storage folder
-  ansible.builtin.file:
-    path: /data/vault/file
-    state: directory
-
-# Create Hashicorp Vault logs folder
-- name: Create Hashicorp Vault logs folder
-  ansible.builtin.file:
-    path: /data/vault/logs
-    state: directory
-
-#########################################################
 ## Pre-installation user/group                         ##
 #########################################################
 
@@ -101,10 +79,42 @@
     name: "vault"
     group: "vault"
     system: true
-    shell: "/sbin/nologin"
+    shell: "/bin/bash"
     comment: "Vault nologin User"
-    createhome: "no"
+    createhome: "yes"
     state: present
+
+# Enable linger for Hashicorp Vault user
+- name: Enable linger for Hashicorp Vault user
+  ansible.builtin.command: "loginctl enable-linger vault"
+
+#########################################################
+## Pre-installation folders                            ##
+#########################################################
+
+# Create Hashicorp Vault config folder
+- name: Create Hashicorp Vault config folder
+  ansible.builtin.file:
+    path: /data/vault/config
+    state: directory
+    owner: vault
+    mode: 0766
+
+# Create Hashicorp Vault storage folder
+- name: Create Hashicorp Vault storage folder
+  ansible.builtin.file:
+    path: /data/vault/file
+    state: directory
+    owner: vault
+    mode: 0766
+
+# Create Hashicorp Vault logs folder
+- name: Create Hashicorp Vault logs folder
+  ansible.builtin.file:
+    path: /data/vault/logs
+    state: directory
+    owner: vault
+    mode: 0766
 
 #########################################################
 ## Installation via podman                             ##
@@ -181,11 +191,22 @@
       ansible.builtin.template:
         src: ./templates/vault.podman_config.hcl.j2
         dest: /data/vault/config/vault.hcl
-        mode: 0640
+        owner: vault
 
     ##################################
     # Create Vault container         #
     ##################################
+
+    # Get uid of user Vault
+    - name: Get uid of user Vault
+      ansible.builtin.user:
+        name: vault
+      register: vault_user
+
+    # Set fact vault_uid
+    - name: Store uid of user Vault
+      ansible.builtin.set_fact:
+        vault_uid: "{{ vault_user.uid }}"  
 
     # Create Hashicorp Vault container
     - name: Create Hashicorp Vault container
@@ -195,6 +216,7 @@
         cap_add: IPC_LOCK
         security_opt: label=disable
         privileged: true
+        user: "{{ vault_uid }}"
         command: vault server -config=/vault/config/vault.hcl
         ports:
           - 8200:8200
@@ -203,22 +225,29 @@
           - /data/vault/file/:/vault/file:Z
           - /data/vault/logs/:/vault/logs:Z
         restart_policy: always
+        env:
+          SKIP_CHOWN: true
+          SKIP_SETCAP: true
 
     # Wait for Hashicorp Vault to start
-    - name: Wait for Hashicorp Vault pod to start
+    - name: Wait for Hashicorp Vault container to start
       ansible.builtin.wait_for:
         host: localhost
         port: 8200
         delay: 5
         timeout: 60
 
-    # Auto-start Vault pod on boot
-    - name: Generate systemd unit file for Vault pod
+    # Auto-start Vault container on system boot
+    - name: Generate systemd unit file for Vault container
       containers.podman.podman_generate_systemd:
         name: vault
         new: true
         no_header: true
-        dest: /etc/systemd/system
+        dest: /home/vault/.config/systemd/user
+
+    # Reload systemd with shell. Use user vault
+    
+    # Enable systemd service for Vault container
 
 #########################################################
 ## Installation on kubernetes                         ##
@@ -277,3 +306,4 @@
 # Configure Hashicorp Vault
 - name: Configure
   ansible.builtin.include_tasks: configure.yml
+  

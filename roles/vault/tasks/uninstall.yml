@@ -1,7 +1,7 @@
 ---
 
 #########################################################
-## Uninstall configuration                             ##
+## Uninstall folders                                   ##
 #########################################################
 
 # Remove Vault config folder
@@ -29,9 +29,25 @@
 - name: Uninstall via podman
   when: platform == "podman"
   block:
-  
-    # Remove Hashicorp Vault pod
-    - name: Remove Hashicorp Vault pod
+    # Remove Hashicorp Vault container
+    - name: Remove Hashicorp Vault container
       containers.podman.podman_container:
         name: vault
         state: absent
+
+#########################################################
+## Uninstall users/groups                              ##
+#########################################################
+
+# Delete user Vault
+- name: Delete user Vault
+  ansible.builtin.user:
+    name: vault
+    state: absent
+    force: true
+
+# Delete user group vault
+- name: Delete user group vault
+  ansible.builtin.group: 
+    name: "vault"
+    state: absent
