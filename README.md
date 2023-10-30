@@ -50,9 +50,39 @@ Het playbook installeert de volgende rollen:
 
 # Voorbereidingen
 
+# Virtuele Machines
+
+**Ansible Development server**<br/>
+De Ansible Development server wordt gebruikt om de code te kopieren (clone) vanuit git en het ansible playbook te starten. Geadviseerd wordt een Linux VM met min. 2 vCPU en 3GB intern geheugen. De diskruimte is 20GB.<br/>
+
+**Lab Playground server**<br/>
+De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linux virtuele machine met 2 vCPU en 4GB geheugen. Geadviseerd wordt een diskruimte van 200Gb ivm mogelijke repository data.<br/>
+
+Development server:<br/>
+Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
+epel-release: prerequisite voor ansible, tar: voor configuratie visual studio code remote ssh, nano: eenvoudige editor.<br/>
+Installeer git en ansible: `dnf install ansible git`.<br/>
+configureer git: `git config --global user.name "(github username)` en `git config --global user.email "(github email)`.<br/>
+Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "your_email@example.com"`<br/>
+kopieer de publieke sleutel en kopieer naar github settings.<br/>
+test git connectie: `ssh -T git@github.com`<br/>
+<br/>
+
+Clone lab-playground repository: `git clone <adres>`..<br/>
+Installeer Ansible Galaxy collections via `sh requirements.sh`.<br/>
 Controleer de variabelen in het `inventory/lab/group_vars/all.yml` bestand en wijzig deze indien nodig.<br/>
 Controleer de ip-adressen in het `inventory/lab/hosts.ini` bestand en wijzig deze indien nodig.<br/> 
-Installeer Ansible Galaxy collections via `sh requirements.sh`.<br/>
+
+
+Lab server:<br/>
+
+Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
+Installeer git en ansible op development server: `dnf install ansible git`.<br/>
+Clone lab-playground repository naar development server.<br/>
+
+
+
+
 
 # Installatie
 
@@ -79,20 +109,3 @@ ansible-playbook install.yml -i inventory/lab/hosts.ini -K
 - automation_password: not present, will be generated.<br/>
 - automation_email: "ansible@marcelvenema.com"<br/>
 
-Clean RHEL/RockyLinux installatie:<br/>
-Volgende packages dienen te worden geinstalleerd:<br/>
-- epel-release : prerequisite voor ansible<br/>
-- ansible : voor starten playbooks<br/>
-- tar : voor configuratie visual studio code remote ssh<br/>
-- nano : makkelijke editor<br/>
-
-`git config --global user.name "(github username)`<br/>
-`git config --global user.email "(github email)`<br/>
-
-Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "your_email@example.com"`<br/>
-kopieer de publieke sleutel en kopieer naar github settings.<br/>
-test git connectie: `ssh -T git@github.com`<br/>
-
-vscode extensions:<br/>
-- ansible<br/>
-- remote-ssh<br/>

@@ -80,13 +80,21 @@
     group: "vault"
     system: true
     shell: "/bin/bash"
-    comment: "Vault nologin User"
+    comment: "Vault user"
     createhome: "yes"
     state: present
 
 # Enable linger for Hashicorp Vault user
 - name: Enable linger for Hashicorp Vault user
   ansible.builtin.command: "loginctl enable-linger vault"
+
+# Create folder for ansible tmp files
+- name: Create folder for ansible files
+  ansible.builtin.file:
+    path: /home/vault/.ansible/tmp
+    state: directory
+    owner: vault
+    mode: 0700
 
 #########################################################
 ## Pre-installation folders                            ##
@@ -237,6 +245,18 @@
         delay: 5
         timeout: 60
 
+    ##################################
+    # Configure autostart container  #
+    ##################################
+
+    # Create folder for systemd unit file
+    - name: Create folder for systemd unit file
+      ansible.builtin.file:
+        path: /home/vault/.config/systemd/user
+        state: directory
+        owner: vault
+        mode: 0766
+
     # Auto-start Vault container on system boot
     - name: Generate systemd unit file for Vault container
       containers.podman.podman_generate_systemd:
@@ -246,8 +266,15 @@
         dest: /home/vault/.config/systemd/user
 
     # Reload systemd with shell. Use user vault
+    - name: Reload systemd with shell. Use user vault
+      ansible.builtin.shell: "systemctl --user daemon-reload"
+      become: true
+      become_user: vault
+      environment:
+        XDG_RUNTIME_DIR: "/run/user/{{ vault_uid }}"
     
     # Enable systemd service for Vault container
+    # TODO
 
 #########################################################
 ## Installation on kubernetes                         ##
@@ -306,4 +333,3 @@
 # Configure Hashicorp Vault
 - name: Configure
   ansible.builtin.include_tasks: configure.yml
-  
