@@ -12,38 +12,38 @@ Het playbook installeert de volgende rollen:
 
 - **RedHat Cockpit**<br/>
   Browser-gebaseerde beheeromgeving voor Linux. Toegang via `http://<hostname>:9090`.<br/>
-  Gebruikersnaam en wachtwoord zijn gedefinieerd in all.yml group_vars bestand als lab_username en lab_password.<br/>
-  Zie ook Ansible role [cockpit](roles/cockpit/README.md)<br/>
+  Gebruikersnaam en wachtwoord worden gedefinieerd tijdens installatie via lab_username en lab_password variabelen.<br/>
+  Zie ook role [cockpit](roles/cockpit/README.md)<br/>
 
 - **Podman container infrastructure**<br/>
   Container infrastructuur. Kan worden beheerd via de Cockpit user interface.<br/>
-  Zie ook Ansible role [podman](roles/podman/README.md)<br/>
+  Zie ook role [podman](roles/podman/README.md)<br/>
 
 - **Hashicorp Vault**<br/>
   Secret management. Geinstalleerd als container, benaderbaar via `http://<hostname>:8200`.<br/>
   Access token en unseal keys zijn opgeslagen in /data/vault/config folder.<br/>
-  Zie ook Ansible role [vault](roles/vault/README.md)<br/>
+  Zie ook role [vault](roles/vault/README.md)<br/>
 
 - **Base-server-config**<br/>
   Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
-  Zie ook Ansible role [base-server-config](roles/base-server-config/README.md)<br/>
+  Zie ook role [base-server-config](roles/base-server-config/README.md)<br/>
 
 - **MySQL**<br/>
   Installatie en configuratie van MySQL server. UNDER DEVELOPMENT.<br/>
-  Zie ook Ansible role [mysql](roles/mysql/README.md)<br/>
+  Zie ook role [mysql](roles/mysql/README.md)<br/>
 
 - **Ansible Semaphore**<br/>
   Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via `http://<hostname>:3000`.<br/>
-  Zie ook Ansible role [semaphore](roles/semaphore/README.md)<br/>
+  Zie ook role [semaphore](roles/semaphore/README.md)<br/>
 
 - **Gogs - Git service**<br/>
   Geinstalleerd als container, benaderbaar via `http://<hostname>:10880`.<br/>
-  Zie ook Ansible role [gogs](roles/gogs/README.md)<br/>
+  Zie ook role [gogs](roles/gogs/README.md)<br/>
 
 - **Sonatype Nexus Repository OSS**<br/>
   Artifact repository. Geinstalleerd als container, benaderbaar via `http://<hostname>:8081`.<br/>
-  User name is admin, initial password is opgeslagen in Vault.<br/>
-  Zie ook Ansible role [nexus_repository](roles/nexus_repository/README.md)<br/>
+  User name is admin, initiele wachtwoord is opgeslagen in Vault.<br/>
+  Zie ook role [nexus_repository](roles/nexus_repository/README.md)<br/>
 
 
 ***
@@ -87,7 +87,7 @@ Clone lab-playground repository naar development server.<br/>
 # Installatie
 
 ```bash
-ansible-playbook install.yml -i inventory/lab/hosts.ini -K
+ansible-playbook install.yml -i inventory/hosts.yml -K
 ```
 
 # Configuratie
@@ -109,3 +109,9 @@ ansible-playbook install.yml -i inventory/lab/hosts.ini -K
 - automation_password: not present, will be generated.<br/>
 - automation_email: "ansible@marcelvenema.com"<br/>
 
+
+# Licentie
+MIT
+
+# Auteur
+Marcel Venema
