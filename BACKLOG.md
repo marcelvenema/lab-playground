@@ -5,6 +5,7 @@
 
 ## Role cockpit
 - Configuratie van banner tekst.
+- Configure action
 
 
 ## Role mysql

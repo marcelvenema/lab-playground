@@ -49,56 +49,49 @@ Het playbook installeert de volgende rollen:
 ***
 
 # Voorbereidingen
+Het playbook wordt gebruikt voor de configuratie van een lab server met een aantal geinstalleerde podman containers als Vault, Nexus Repository, MySQL, Semaphore en Gogs. Een voorbeeld typische infrastructuur is een **Ansible Development server** en **Lab Playground server**.<br/> 
 
-# Virtuele Machines
+## Virtuele Machines
 
 **Ansible Development server**<br/>
 De Ansible Development server wordt gebruikt om de code te kopieren (clone) vanuit git en het ansible playbook te starten. Geadviseerd wordt een Linux VM met min. 2 vCPU en 3GB intern geheugen. De diskruimte is 20GB.<br/>
 
-**Lab Playground server**<br/>
-De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linux virtuele machine met 2 vCPU en 4GB geheugen. Geadviseerd wordt een diskruimte van 200Gb ivm mogelijke repository data.<br/>
-
-Development server:<br/>
+Voorbereidingen Ansible Development server:<br/>
 Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
 epel-release: prerequisite voor ansible, tar: voor configuratie visual studio code remote ssh, nano: eenvoudige editor.<br/>
 Installeer git en ansible: `dnf install ansible git`.<br/>
-configureer git: `git config --global user.name "(github username)` en `git config --global user.email "(github email)`.<br/>
-Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "your_email@example.com"`<br/>
+configureer git: `git config --global user.name "<github username>` en `git config --global user.email "<github email>`.<br/>
+Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br/>
 kopieer de publieke sleutel en kopieer naar github settings.<br/>
 test git connectie: `ssh -T git@github.com`<br/>
-<br/>
+
 
 Clone lab-playground repository: `git clone <adres>`..<br/>
 Installeer Ansible Galaxy collections via `sh requirements.sh`.<br/>
-Controleer de variabelen in het `inventory/lab/group_vars/all.yml` bestand en wijzig deze indien nodig.<br/>
-Controleer de ip-adressen in het `inventory/lab/hosts.ini` bestand en wijzig deze indien nodig.<br/> 
+Controleer de variabelen in het `group_vars/all.yml` bestand en wijzig deze indien nodig.<br/>
+Controleer de ip-adressen in het `inventory/hosts.yml` bestand en wijzig deze indien nodig.<br/> 
 
 
-Lab server:<br/>
-
-Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
-Installeer git en ansible op development server: `dnf install ansible git`.<br/>
-Clone lab-playground repository naar development server.<br/>
-
-
+**Lab Playground server**<br/>
+De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linux virtuele machine met 2 vCPU en 4GB geheugen. Geadviseerd wordt een diskruimte van 200Gb ivm mogelijke repository data.<br/>
 
 
 
 # Installatie
-
+Installatie van het playbook kan via onderstaande commandline. De -K parameter vraagt om het BECOME wachtwoord.<br/>
 ```bash
 ansible-playbook install.yml -i inventory/hosts.yml -K
 ```
+
 
 # Configuratie
 
 
 ## Globale variabelen:
+Onderstaande globale variabelen kunnen worden gebruikt:<br/>
 
 - uninstall: true | false<br/>
   Bij installatie (install) van een role, wordt de role eerst ge-deinstalleerd (uninstall).<br/>
-
-
 - lab_hostname: labserver.marcelvenema.com<br/>
 - lab_username: admin<br/>
 - lab_usercomment: "Admin user for Lab environment"<br/>
@@ -111,7 +104,7 @@ ansible-playbook install.yml -i inventory/hosts.yml -K
 
 
 # Licentie
-MIT
+MIT<br/>
 
 # Auteur
-Marcel Venema
+Marcel Venema<br/>
