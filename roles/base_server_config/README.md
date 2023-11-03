@@ -20,8 +20,6 @@ De volgende taken worden uitgevoerd:<br/>
 
 # Diensten:
 
-## Configuratie
-
 action: **configure**<br/>
 Configuratie management van de server.<br/>
 variablen:<br/>

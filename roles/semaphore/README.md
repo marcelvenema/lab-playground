@@ -14,7 +14,6 @@ Ansible role voor installatie en configuratie van Ansible Semaphore.<br/>
 
 # Diensten:
 
-## Installatie en configuratie Ansible Semaphore
 
 action: **install**<br/>
 Installatie van laatste versie van Ansible Semaphore. Basis configuratie.<br/>
@@ -28,8 +27,20 @@ variables:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
 
 
+***
 
-Voorbeeld voor installatie Ansible Semaphore:
+
+## Voorbereidingen
+(geen).<br/>
+
+
+## Afhankelijkheden
+(geen).<br/>
+
+
+## Installatie en configuratie
+Installatie via action 'install'.<br/>
+Voorbeeld voor installatie Semaphore:
 
 ```
 ---
@@ -39,10 +50,18 @@ Voorbeeld voor installatie Ansible Semaphore:
   roles:
     - role: semaphore
       vars:
-        action            : install
+        action : install
 
 ```
 
 
-
 ## Overige informatie
+(geen).<br/>
+
+
+## Licentie
+MIT
+
+
+## Auteur
+Marcel Venema

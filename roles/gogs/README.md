@@ -9,12 +9,9 @@ Ansible role voor installatie en configuratie van Git Gogs.<br/>
 <br/>
 <br/>
 
-
 ***
 
 # Diensten:
-
-## Installatie en configuratie Git Gogs
 
 action: **install**<br/>
 Installatie van laatste versie van Git Gogs. Basis configuratie.<br/>
@@ -28,8 +25,20 @@ variables:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
 
 
+***
 
-Voorbeeld voor installatie Git Gogs:
+
+## Voorbereidingen
+(geen).<br/>
+
+
+## Afhankelijkheden
+Gogs maakt gebruik van een MySQL database.<br/>
+
+
+## Installatie
+Installatie via action 'install'.<br/>
+Voorbeeld voor installatie Gogs Git service:
 
 ```
 ---
@@ -39,10 +48,22 @@ Voorbeeld voor installatie Git Gogs:
   roles:
     - role: podman.gogs
       vars:
-        action            : install
+        action : install
 
 ```
 
 
+## Configuratie
+(geen).<br/>
+
 
 ## Overige informatie
+(geen).<br/>
+
+
+## Licentie
+MIT
+
+
+## Auteur
+Marcel Venema

@@ -15,8 +15,6 @@ Website leverancier: `https://project-cockpit.org`<br/>
 
 # Diensten:
 
-## Installatie en configuratie van RedHat Cockpit
-
 action: **install**<br/>
 Installatie van laatste Cockpit versie. Basis configuratie van Cockpit.<br/>
 variablen:<br/>

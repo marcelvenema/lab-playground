@@ -14,7 +14,6 @@ Ansible role voor installatie en configuratie van podman.<br/>
 
 # Diensten:
 
-## Installatie en configuratie RedHat Podman
 
 action: **install**<br/>
 Installatie van laatste versie van RedHat Podman. Basis configuratie.<br/>
@@ -28,7 +27,19 @@ variables:<br/>
 <kbd>(geen)</kbd> : Geen variablen benodigd.<br/>
 
 
+***
 
+
+## Voorbereidingen
+(geen).<br/>
+
+
+## Afhankelijkheden
+(geen).<br/>
+
+
+## Installatie en configuratie
+Installatie via action 'install'.<br/>
 Voorbeeld voor installatie RedHat Podman:
 
 ```
@@ -39,10 +50,18 @@ Voorbeeld voor installatie RedHat Podman:
   roles:
     - role: podman
       vars:
-        action            : install
+        action : install
 
 ```
 
 
-
 ## Overige informatie
+(geen).<br/>
+
+
+## Licentie
+MIT
+
+
+## Auteur
+Marcel Venema
