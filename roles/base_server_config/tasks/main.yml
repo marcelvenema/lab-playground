@@ -12,9 +12,9 @@
     fail_msg: "Please provide 'action' {{ actions }}"
     quiet: true
 
-- name: Configure base-server-config settings
-  ansible.builtin.include_tasks: configure.yml
-  when: action == "configure"
+- name: Configure base-server-config settings for lab playground
+  ansible.builtin.include_tasks: configure_playground.yml
+  when: action == "configure_playground"
 
 - name: Configure Vault for base-server-config settings
   ansible.builtin.include_tasks: configure_vault.yml

@@ -20,7 +20,7 @@
     - role: base_server_config
       become: true
       vars:
-        action: configure
+        action: configure_playground
         admin_hostname: "lab.marcelvenema.com"
         admin_username: "{{ lab_username }}"
         admin_usercomment: "Admin user for lab server"
