@@ -16,6 +16,7 @@ De volgende taken worden uitgevoerd:<br/>
 - Aanmaken admin gebruiker, op basis van `{{ admin_username }}` parameter. Indien niet geconfigureerd wordt, 'admin' als standaard waarde gebruikt.<br/>
 - Aanmaken wachtwoord gebruiker, op basis van `{{ admin_password }}` parameter. Indien niet geconfigreerd, wordt 'P@ssw0rd!' als standaard waarde gebruikt.<br/>
 - Aanmaken SSH key, RSA 4096.<br/>
+- Enable automatic software updates.<br/>
 
 
 # Diensten:

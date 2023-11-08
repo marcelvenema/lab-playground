@@ -26,7 +26,7 @@ Het playbook installeert de volgende rollen:
 
 - **Base-server-config**<br/>
   Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
-  Zie ook role [base-server-config](roles/base-server-config/README.md)<br/>
+  Zie ook role [base_server_config](roles/base_server_config/README.md)<br/>
 
 - **MySQL**<br/>
   Installatie en configuratie van MySQL server. UNDER DEVELOPMENT.<br/>

@@ -80,3 +80,12 @@
     ssh_key_file: .ssh/id_rsa
     ssh_key_passphrase: ""
     force: false
+
+#########################################################
+## System                                              ##
+#########################################################
+
+# Enable automatic updates. include tasks from auto_update.yml
+- name: Enable automatic updates
+  ansible.builtin.include_tasks: auto_update.yml
+
