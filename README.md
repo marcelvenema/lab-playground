@@ -24,9 +24,9 @@ Het playbook installeert de volgende rollen:
   Access token en unseal keys zijn opgeslagen in /data/vault/config folder.<br/>
   Zie ook role [vault](roles/vault/README.md)<br/>
 
-- **Base-server-config**<br/>
+- **Server-Config-Linux**<br/>
   Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
-  Zie ook role [base_server_config](roles/base_server_config/README.md)<br/>
+  Zie ook role [server_config_linux](roles/server_config_linux/README.md)<br/>
 
 - **MySQL**<br/>
   Installatie en configuratie van MySQL server. UNDER DEVELOPMENT.<br/>
@@ -44,6 +44,7 @@ Het playbook installeert de volgende rollen:
   Artifact repository. Geinstalleerd als container, benaderbaar via `http://<hostname>:8081`.<br/>
   User name is admin, initiele wachtwoord is opgeslagen in Vault.<br/>
   Zie ook role [nexus_repository](roles/nexus_repository/README.md)<br/>
+
 
 
   Overzicht [ontwerp](docs/DESIGN.md)<br/>

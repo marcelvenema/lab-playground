@@ -1,4 +1,4 @@
-# Lab playground server design
+# Lab Playground Server design
 
 ***
 ```mermaid

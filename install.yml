@@ -17,7 +17,7 @@
     lab_email: "marcel@marcelvenema.com"
 
   roles:
-    - role: base_server_config
+    - role: server_config_linux
       become: true
       vars:
         action: configure_playground
@@ -47,7 +47,7 @@
         repository_url: "docker.io/hashicorp/vault"
         # repository_url: "/repository/vault_1.15.0.tar"
 
-    - role: base_server_config
+    - role: server_config_linux
       become: true
       gather_facts: true
       vars:
