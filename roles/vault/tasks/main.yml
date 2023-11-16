@@ -24,6 +24,10 @@
   ansible.builtin.include_tasks: configure.yml
   when: action == "configure"
 
+- name: Update Hashicorp Vault
+  ansible.builtin.include_tasks: update.yml
+  when: action == "update"
+
 - name: Unseal Vault
   ansible.builtin.include_tasks: unseal.yml
   when: action == "unseal"

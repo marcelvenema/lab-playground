@@ -7,6 +7,8 @@ Ansible role voor installatie en configuratie van Hashicorp Vault.<br/>
 Afhankelijk van de infrastructuur wordt deze als Podman pod (docker container), kubernetes container of direct op het besturingssysteem geinstalleerd.<br/>
 Vooralsnog is alleen installatie en configuratie als Podman pod beschikbaar.<br/>
 <br/>
+Website leverancier: `https://vaultproject.io`<br/>
+<br/>
 <br/>
 
 
@@ -20,6 +22,7 @@ Vooralsnog is alleen installatie en configuratie als Podman pod beschikbaar.<br/
 action: **install**<br/>
 Installatie van laatste versie van Hashicorp Vault. Basis configuratie.<br/>
 variables:<br/>
+<kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
 <kbd>platform (optioneel)</kbd>  : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
 <kbd>uninstall (optioneel)</kbd> : true/false. Wanneer, true wordt voor installatie eerst uninstall gestart.<br/>
 
@@ -33,7 +36,7 @@ variables:<br/>
 action: **update**<br/>
 Update Hashicorp Vault naar de laatste versie. (backlog).<br/>
 variables:<br/>
-<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+<kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
 <kbd>platform (optioneel)</kbd>  : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
 
 
@@ -44,7 +47,7 @@ variables:<br/>
 <kbd>vault_address</kbd>     : URL naar Vault, bijvoorbeeld `https://192.168.1.0:8200`.<br/>
 
 
-
+<br/>
 ## Secrets
 
 action: **create_secret_engine**<br/>
@@ -77,5 +80,14 @@ variables:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
 
 
-
+<br/>
 ## Overige informatie
+
+
+
+## Licentie
+MIT
+
+
+## Auteur
+Marcel Venema

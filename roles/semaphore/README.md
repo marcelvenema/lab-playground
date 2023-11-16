@@ -18,7 +18,7 @@ Ansible role voor installatie en configuratie van Ansible Semaphore.<br/>
 action: **install**<br/>
 Installatie van laatste versie van Ansible Semaphore. Basis configuratie.<br/>
 variables:<br/>
-<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+<kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
 
 
 action: **uninstall**<br/>

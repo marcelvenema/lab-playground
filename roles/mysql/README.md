@@ -18,7 +18,7 @@ Website leverancier: `https://mysql.com`.<br/>
 action: **install**<br/>
 Installatie van laatste versie van Oracle MySQL. Basis configuratie.<br/>
 variablen:<br/>
-<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+<kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
 
 
 action: **uninstall**<br/>

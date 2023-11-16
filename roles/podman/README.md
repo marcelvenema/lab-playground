@@ -5,7 +5,7 @@
 <img src="media/icon_podman.png" align="left" height="128" width="128" />
 Ansible role voor installatie en configuratie van podman.<br/>
 <br/>
-<br/>
+Website leverancier : `https://podman.io`<br/>
 <br/>
 <br/>
 
@@ -23,6 +23,12 @@ variables:<br/>
 
 action: **uninstall**<br/>
 De-installatie van RedHat Podman.<br/>
+variables:<br/>
+<kbd>(geen)</kbd> : Geen variablen benodigd.<br/>
+
+
+action: **update**<br/>
+Update van RedHat Podman.<br/>
 variables:<br/>
 <kbd>(geen)</kbd> : Geen variablen benodigd.<br/>
 

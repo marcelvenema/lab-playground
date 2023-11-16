@@ -2,7 +2,7 @@
 
 ***
 
-<img src="media/logo_lab.png" align="left"/>
+<img src="media/banner_lab.png" align="left"/>
 Playbook voor installatie en configuratie van een development lab server, als basis voor het ontwikkelen van een moderne infrastructuur. Automatische installatie en configuratie van o.a. Ansible, GitLab, Semaphore, Hashicorp Vault en Nexus Repository OSS.
 
 ***

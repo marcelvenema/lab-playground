@@ -1,0 +1,10 @@
+---
+
+#########################################################
+## Update                                              ##
+#########################################################
+
+- name: Upgrade Cockpit package
+  ansible.builtin.dnf:
+    name: "cockpit"
+    state: latest

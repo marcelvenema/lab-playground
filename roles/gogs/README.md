@@ -16,7 +16,7 @@ Ansible role voor installatie en configuratie van Git Gogs.<br/>
 action: **install**<br/>
 Installatie van laatste versie van Git Gogs. Basis configuratie.<br/>
 variables:<br/>
-<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+<kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of path.<br/>
 
 
 action: **uninstall**<br/>

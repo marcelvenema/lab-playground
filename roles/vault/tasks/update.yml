@@ -1,0 +1,16 @@
+---
+
+#########################################################
+## Update                                              ##
+#########################################################
+
+# Validate global variables
+- name: Validate global variables for Hashicorp Vault update module.
+  ansible.builtin.assert:
+    that: "{{ varitem }} is defined"
+    fail_msg: "Required variable '{{ varitem }}' has not been provided."
+    quiet: true
+  loop_control:
+    loop_var: varitem
+  loop: 
+    - repository_url

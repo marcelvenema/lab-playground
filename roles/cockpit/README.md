@@ -7,6 +7,7 @@ Ansible role voor installatie en configuratie van Redhat Cockpit, een webbased U
 Indien gedetecteerd, worden plugins voor Podman en KVM virtuele machines automatisch geinstalleerd.<br/>
 
 De UI is na installatie bereikbaar via `https://<servernaam/ip>:9090`<br/>
+<br/>
 Website leverancier: `https://project-cockpit.org`<br/>
 <br/>
 
@@ -29,6 +30,12 @@ variablen:<br/>
 
 action: **configure**<br/>
 Her-configuratie van RedHat Cockpit. ROADMAP.<br/>
+variablen:<br/>
+<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+
+
+action: **update**<br/>
+Update van RedHat Cockpit.<br/>
 variablen:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
 

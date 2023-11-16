@@ -1,0 +1,10 @@
+---
+
+#########################################################
+## Update                                              ##
+#########################################################
+
+- name: Upgrade Podman package
+  ansible.builtin.dnf:
+    name: "podman"
+    state: latest

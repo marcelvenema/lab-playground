@@ -13,9 +13,8 @@
   loop_control:
     loop_var: varitem
   loop: 
-    - nexus_repository_address
-    - nexus_repository_username
-    - nexus_repository_password
+    - repository_url
+
 
 #########################################################
 ## Sonatype Nexus update                               ##

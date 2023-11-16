@@ -23,3 +23,7 @@
 - name: Configure
   ansible.builtin.include_tasks: configure.yml
   when: action == "configure"
+
+- name: Update
+  ansible.builtin.include_tasks: update.yml
+  when: action == "update"
