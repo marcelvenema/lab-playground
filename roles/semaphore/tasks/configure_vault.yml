@@ -1,0 +1,26 @@
+---
+
+#########################################################
+## Vault module                                        ##
+#########################################################
+
+# Validate variables
+- name: Validate variables for action.
+  ansible.builtin.assert:
+    that: "{{ item }} is defined"
+    fail_msg: "Required variable '{{ item }}' has not been provided."
+    quiet: true
+  with_items:
+    - vault_address
+    - vault_token
+
+# Store usernames and passwords in Hashicorp Vault.
+- name: Store Semaphore usernames and passwords in Vault
+  ansible.builtin.include_role:
+    name: vault
+    tasks_from: secrets.yml
+  vars:
+    action: create_secret
+    vault_name: "{{ ansible_fqdn | replace('.', '-') }}"
+    secret_name: "semaphore"
+    secret_keyvalue: "{ 'admin_username': '{{ semaphore_admin_username }}', 'admin_password': '{{ semaphore_admin_password }}' }"

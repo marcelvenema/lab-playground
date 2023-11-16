@@ -11,7 +11,6 @@ De UI is na installatie bereikbaar via `https://<servernaam/ip>:9090`<br/>
 Website leverancier: `https://project-cockpit.org`<br/>
 <br/>
 
-
 ***
 
 # Diensten:
@@ -38,7 +37,7 @@ action: **update**<br/>
 Update van RedHat Cockpit.<br/>
 variablen:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
-
+<br/>
 
 
 Bij installatie worden volgende configuratie instellingen gedaan:<br />

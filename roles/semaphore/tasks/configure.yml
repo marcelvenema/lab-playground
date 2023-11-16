@@ -3,3 +3,16 @@
 #########################################################
 ## Configuration                                       ##
 #########################################################
+
+# Configure Vault for Semaphore if Vault is present
+- name: Configure Vault for Semaphore
+  ansible.builtin.include_tasks: configure_vault.yml
+  when:
+    - vault_address is defined
+    - vault_token is defined
+
+# Create Semaphore project
+- name: Create Semaphore project
+  ansible.builtin.include_tasks: projects.yml
+  vars:
+    - semaphore_project_name: "Lab Playground"

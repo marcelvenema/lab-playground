@@ -24,10 +24,19 @@ variablen:<br/>
 <kbd>vault_token</kbd>           : token voor toegang tot vault.<br/>
 
 
+action: **uninstall**<br/>
+De-installatie van Nexus Repository OSS versie.<br/>
+variablen:<br/>
+<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+
+
 action: **update**<br/>
 Update naar laatste Sonatype Nexus Repository OSS versie. (backlog).
 variablen:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+
+
+## Repositories
 
 
 action: **create_repository**<br/>
@@ -41,6 +50,9 @@ action: **destroy_repository**<br/>
 Verwijderen repository in Nexus. (backlog).
 variablen:<br/>
 <kbd>nexus_repository_name</kbd> :  Naam voor repository.<br/>
+
+
+## Users and groups
 
 
 action: **create_user**<br/>
@@ -65,6 +77,9 @@ Wijzigen van wachtwoord van een gebruiker in Nexus. (backlog).
 variablen:<br/>
 <kbd>nexus_username</kbd> :  Gebruikersnaam.<br/>
 <kbd>nexus_password</kbd> :  Wachtwoord.<br/>
+
+
+## Artifacts
 
 
 action: **import_artifacts**<br/>

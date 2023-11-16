@@ -8,7 +8,8 @@ Ansible role voor installatie en configuratie van Ansible Semaphore.<br/>
 <br/>
 <br/>
 <br/>
-
+Website van leverancier: `https://semaphoreui.com`<br/>
+<br/>
 
 ***
 
