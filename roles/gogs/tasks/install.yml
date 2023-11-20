@@ -168,13 +168,25 @@
         restart_policy: always
         state: started
 
-    # Auto-start Gogs pod on boot
-    - name: Generate systemd unit file for Gogs pod
+    # Auto-start Gogs pod on system boot
+    - name: Generate systemd unit file for Gogs container
       containers.podman.podman_generate_systemd:
         name: gogs
         new: true
         no_header: true
         dest: /etc/systemd/system
+
+    # Reload systemd
+    - name: Reload systemd
+      ansible.builtin.systemd_service:
+        daemon_reload: yes
+        scope: system
+    
+    # Enable systemd service for Gogs container
+    - name: Enable systemd service for Gogs container
+      ansible.builtin.service:
+        name: container-gogs.service
+        enabled: yes
 
 #########################################################
 ## Installation on kubernetes                          ##

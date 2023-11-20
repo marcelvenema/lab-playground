@@ -131,7 +131,7 @@
 - name: Install Vault on podman
   when: platform == "podman"
   block:
-  
+ 
     ##################################
     # Import container image         # 
     ##################################
@@ -257,6 +257,18 @@
         owner: vault
         mode: 0766
 
+    # Stop Vault container
+    - name: Stop Vault container
+      containers.podman.podman_container:
+        name: container
+        image: vault
+        state: absent
+    
+    # Prune containers
+    - name: Prune everything
+      containers.podman.podman_prune:
+        volume: true
+
     # Auto-start Vault container on system boot
     - name: Generate systemd unit file for Vault container
       containers.podman.podman_generate_systemd:
@@ -264,6 +276,13 @@
         new: true
         no_header: true
         dest: /home/vault/.config/systemd/user
+
+    # Set systemd unit file permissions
+    - name: Set systemd unit file permissions
+      ansible.builtin.file:
+        path: /home/vault/.config/systemd/user/container-vault.service
+        owner: vault
+        mode: 0644
 
     # Reload systemd with shell. Use user vault
     - name: Reload systemd with shell. Use user vault
@@ -274,7 +293,12 @@
         XDG_RUNTIME_DIR: "/run/user/{{ vault_uid }}"
     
     # Enable systemd service for Vault container
-    # TODO
+    #- name: Enable systemd service for Vault container
+    #  ansible.builtin.shell: "systemctl --user enable --now container-vault.service"
+    #  become: true
+    #  become_user: vault
+    #  environment:
+    #    XDG_RUNTIME_DIR: "/run/user/{{ vault_uid }}"
 
 #########################################################
 ## Installation on kubernetes                         ##

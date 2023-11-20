@@ -173,7 +173,7 @@
       delay: 15
 
     # Auto-start Nexus pod on system boot
-    - name: Generate systemd unit file for Nexus pod
+    - name: Generate systemd unit file for Nexus container
       containers.podman.podman_generate_systemd:
         name: nexus
         new: true
