@@ -46,7 +46,7 @@ Het playbook installeert de volgende rollen:
   Zie ook role [nexus_repository](roles/nexus_repository/README.md)<br/>
 
 
-<br/>
+
 Overzicht [ontwerp](docs/DESIGN.md)<br/>
 
 ***

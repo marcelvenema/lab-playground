@@ -18,6 +18,7 @@ action: **install**<br/>
 Installatie van laatste versie van Sonatype Nexus Repository OSS. Basis configuratie.<br/>
 variablen:<br/>
 <kbd>repository_url</kbd>        : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
+<kbd>repository_tag (optioneel)</kbd> : release of versienummer van het container image. standaard is 'latest'.<br/>
 <kbd>platform (optioneel)</kbd>  : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
 <kbd>uninstall (optioneel)</kbd> : true/false. Wanneer, true wordt voor installatie eerst uninstall gestart.<br/>
 <kbd>vault_address</kbd>         : url naar vault adres voor toegang vault, bijvoorbeeld `http://localhost:8081`<br/>

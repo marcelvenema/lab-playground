@@ -19,7 +19,7 @@ action: **install**<br/>
 Installatie van laatste versie van Oracle MySQL. Basis configuratie.<br/>
 variablen:<br/>
 <kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
-
+<kbd>repository_tag (optioneel)</kbd> : release of versienummer van het container image. standaard is 'latest'.<br/>
 
 action: **uninstall**<br/>
 De-installatie van Oracle MySQL. Verwijderen configuratie folder.<br/>

@@ -96,10 +96,17 @@
     # Import container image         # 
     ##################################
 
+    # If tag is not defined, set value to latest
+    - name: Set tag to latest if not defined
+      ansible.builtin.set_fact:
+        repository_tag: "latest"
+      when: repository_tag is not defined
+
     # Pull image from repository to local image repository. If failed, lookup local image file.
     - name: Pull MySQL container image from repository
       containers.podman.podman_image:
         name: "{{ repository_url }}"
+        tag: "{{ repository_tag }}"
       register: pull_result
       ignore_errors: true
 
