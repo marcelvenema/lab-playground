@@ -67,10 +67,17 @@
 ## Pre-installation folders                            ##
 #########################################################
 
+# Check if data_dir exists, else set default
+- name: "Validate data_dir folder {{ data_dir}}..."
+  ansible.builtin.set_fact:
+    data_dir: "/data/mysql"
+  when: 
+    - data_dir is not defined or data_dir == "" or data_dir == none
+
 # Create MySQL data folder
-- name: Create MySQL data folder
+- name: "Create MySQL data folder {{ data_dir }}/data"
   ansible.builtin.file:
-    path: /data/mysql/data
+    path: "{{ data_dir }}/data"
     state: directory
     mode: '0755'
 
@@ -96,14 +103,15 @@
     # Import container image         # 
     ##################################
 
-    # If tag is not defined, set value to latest
-    - name: Set tag to latest if not defined
+    # If tag is not defined or empty, set value to latest
+    - name: Validate repository_tag, set default
       ansible.builtin.set_fact:
         repository_tag: "latest"
-      when: repository_tag is not defined
+      when:
+        - repository_tag is not defined or repository_tag == "" or repository_tag == none
 
     # Pull image from repository to local image repository. If failed, lookup local image file.
-    - name: Pull MySQL container image from repository
+    - name: "Pull MySQL container image from repository {{ repository_url}}:{{ repository_tag }}"
       containers.podman.podman_image:
         name: "{{ repository_url }}"
         tag: "{{ repository_tag }}"
@@ -234,3 +242,13 @@
 # Configure MySQL
 - name: Configure MySQL
   ansible.builtin.include_tasks: configure.yml
+
+#########################################################
+## Post-install                                        ##
+#########################################################
+
+# Unset variables
+- name: Unset variables
+  ansible.builtin.set_fact:
+    repository_tag:
+    data_dir:

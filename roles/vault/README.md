@@ -23,8 +23,8 @@ action: **install**<br/>
 Installatie van laatste versie van Hashicorp Vault. Basis configuratie.<br/>
 variables:<br/>
 <kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
-<kbd>repository_tag (optioneel)</kbd> : release of versienummer van het container image. standaard is 'latest'.<br/>
-<kbd>platform (optioneel)</kbd>  : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
+<kbd>repository_tag (optioneel)</kbd> : Release of versienummer van het image. Standaard is 'latest'.<br/>
+<kbd>platform (optioneel)</kbd> : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
 <kbd>uninstall (optioneel)</kbd> : true/false. Wanneer, true wordt voor installatie eerst uninstall gestart.<br/>
 
 
@@ -38,14 +38,16 @@ action: **update**<br/>
 Update Hashicorp Vault naar de laatste versie. (backlog).<br/>
 variables:<br/>
 <kbd>repository_url</kbd> : URL met locatie van container repository. Kan een url zijn of pad naar lokaal bestand.<br/>
-<kbd>platform (optioneel)</kbd>  : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
+<kbd>repository_tag (optioneel)</kbd> : Release of versienummer van het image. Standaard is 'latest'.<br/>
+<kbd>platform (optioneel)</kbd> : installeer op specifiek platform, bijvoorbeeld podman, kubernetes, linux. Standaard is autodetect.<br/>
 
 
 action: **unseal**<br/>
 Unseal Vault zodat deze gereed is voor gebruik.<br/>
 variables:<br/>
-<kbd>vault_unseal_keys</kbd> : Unseal keys.<br/>
-<kbd>vault_address</kbd>     : URL naar Vault, bijvoorbeeld `https://192.168.1.0:8200`.<br/>
+<kbd>vault_address</kbd> : URL naar Vault, bijvoorbeeld `https://192.168.1.0:8200`.<br/>
+<kbd>vault_unseal_keys</kbd> : Unseal keys van Vault. Dit zijn de keys die zijn gegenereerd tijdens de installatie.<br/>
+
 
 
 <br/>
@@ -79,6 +81,21 @@ action: **destroy_secret**<br/>
 Nader in te vullen.<br/>
 variables:<br/>
 <kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+
+
+action: **import_secrets**<br/>
+Nader in te vullen.<br/>
+variables:<br/>
+<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+
+action: **export_secrets**<br/>
+Exporteer secrets uit Vault naar een bestand.<br/>
+variables:<br/>
+<kbd>vault_address</kbd> : URL naar Vault, bijvoorbeeld `https://192.168.1.0:8200`.<br/>
+<kbd>vault_token</kbd> : Token voor toegang tot Vault.<br/>
+<kbd>vault_name</kbd> : Naam van de vault (secret_engine) om secrets te exporteren.<br/>
+<kbd>secret_name</kbd> : Secret naam.<br/>
+<kbd>file_name</kbd> : Bestandsnaam voor export secrets.<br/>
 
 
 <br/>

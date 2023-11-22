@@ -100,33 +100,36 @@
 ## Pre-installation folders                            ##
 #########################################################
 
+# Check if data_dir exists, else set default
+- name: "Validate data_dir folder {{ data_dir}}..."
+  ansible.builtin.set_fact:
+    data_dir: "/data/vault"
+  when: 
+    - data_dir is not defined or data_dir == "" or data_dir == none
+
 # Create Hashicorp Vault config folder
-- name: Create Hashicorp Vault config folder
+- name: "Create Hashicorp Vault folder {{ data_dir }}/config..."
   ansible.builtin.file:
-    path: /data/vault/config
+    path: "{{ data_dir }}/config"
     state: directory
     owner: vault
     mode: 0766
 
 # Create Hashicorp Vault storage folder
-- name: Create Hashicorp Vault storage folder
+- name: "Create Hashicorp Vault folder {{ data_dir }}/file..."
   ansible.builtin.file:
-    path: /data/vault/file
+    path: "{{ data_dir }}/file"
     state: directory
     owner: vault
     mode: 0766
 
 # Create Hashicorp Vault logs folder
-- name: Create Hashicorp Vault logs folder
+- name: "Create Hashicorp Vault folder {{ data_dir }}/logs..."
   ansible.builtin.file:
-    path: /data/vault/logs
+    path: "{{ data_dir }}/logs"
     state: directory
     owner: vault
     mode: 0766
-
-
-
-
 
 #########################################################
 ## Installation via podman                             ##
@@ -141,13 +144,13 @@
     ##################################
 
     # If tag is not defined, set value to latest
-    - name: Set tag to latest if not defined
+    - name: Validate repository_tag, set default
       ansible.builtin.set_fact:
         repository_tag: "latest"
-      when: repository_tag is not defined
+      when: repository_tag is not defined or repository_tag == "" or repository_tag == none
 
     # Pull image from repository to local image repository. If failed, lookup local image file.
-    - name: Pull Vault container image from repository
+    - name: "Pull Vault container image from repository {{ repository_url}}:{{ repository_tag }}"
       containers.podman.podman_image:
         name: "{{ repository_url }}"
         tag: "{{ repository_tag }}"
@@ -368,3 +371,13 @@
 # Configure Hashicorp Vault
 - name: Configure
   ansible.builtin.include_tasks: configure.yml
+
+#########################################################
+## Post-install                                        ##
+#########################################################
+
+# Unset variables
+- name: Unset variables
+  ansible.builtin.set_fact:
+    repository_tag:
+    data_dir:

@@ -2,6 +2,17 @@
 
 actions:
   - install
+  - install_description: "Installatie van laatste Cockpit versie. Basis configuratie van Cockpit."
+  - install_icon: "media/icon_cockpit.png"
+
   - uninstall
+  - uninstall_description: "De-installatie van RedHat Cockpit. Verwijderen configuratie folder."
+  - uninstall_icon: "media/icon_cockpit.png"
+
   - configure
+  - configure_description: "Her-configuratie van RedHat Cockpit. ROADMAP."
+  - configure_icon: "media/icon_cockpit.png"
+
   - update
+  - update_description: "Update van RedHat Cockpit."
+  - update_icon: "media/icon_cockpit.png"

@@ -46,6 +46,10 @@
         # repository url can be a url to repository or a local file. example: docker.io/hashicorp/vault or /tmp/vault_<version>.tar
         repository_url: "docker.io/hashicorp/vault"
         # repository_url: "/repository/vault_1.15.0.tar"
+        # repository_tag can be a tag or a version. example: 1.15.0 or 1.15.0-beta1. default is 'latest'.
+        repository_tag: "latest"
+        # data_dir : base folder to store data. example: "/data/vault" # default is /data/vault
+        data_dir: "/data/vault"
 
     - role: server_config_linux
       become: true
@@ -64,6 +68,7 @@
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/mysql/mysql-server or /tmp/mysql_<version>.tar
         repository_url: "docker.io/mysql/mysql-server"
+        repository_tag: "latest"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>                                      not neccecary if vault is installed on the same server
 

@@ -12,7 +12,7 @@
     quiet: true
   loop_control:
     loop_var: varitem
-  loop: 
+  loop:
     - vault_address
     - vault_token
 

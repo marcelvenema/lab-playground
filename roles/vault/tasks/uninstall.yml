@@ -4,22 +4,28 @@
 ## Uninstall folders                                   ##
 #########################################################
 
+# Check if data_dir exists, else set default
+- name: Check data_dir folder, set default
+  ansible.builtin.set_fact:
+    data_dir: "/data/vault"
+  when: data_dir is not defined
+
 # Remove Vault config folder
 - name: Remove Hashicorp Vault config folder
   ansible.builtin.file:
-    path: /data/vault/config
+    path: "{{ data_dir }}/config"
     state: absent
 
 # Remove Vault data folder
 - name: Remove Hashicorp Vault storage folder
   ansible.builtin.file:
-    path: /data/vault/file
+    path: "{{ data_dir }}/file"
     state: absent
 
 # Remove Vault log folder
 - name: Remove Hashicorp Vault log folder
   ansible.builtin.file:
-    path: /data/vault/logs
+    path: "{{ data_dir }}/logs"
     state: absent
 
 #########################################################

@@ -76,10 +76,16 @@
 ## Pre-installation folders                            ##
 #########################################################
 
+# Check if data_dir exists, else set default
+- name: Validate data_dir folder, set default
+  ansible.builtin.set_fact:
+    data_dir: "/data/semaphore"
+  when: data_dir is not defined or data_dir == "" or data_dir == none
+
 # Create Semaphore config folder
 - name: Create Semaphore config folder
   ansible.builtin.file:
-    path: /data/semaphore/config
+    path: "{{ data_dir }}/config"
     state: directory
     mode: '0755'
 
@@ -112,10 +118,10 @@
     ##################################
 
     # If tag is not defined, set value to latest
-    - name: Set tag to latest if not defined
+    - name: Validate repository_tag, set default
       ansible.builtin.set_fact:
         repository_tag: "latest"
-      when: repository_tag is not defined
+      when: repository_tag is not defined or repository_tag == "" or repository_tag == none
 
     # Pull image from repository to local image repository. If failed, lookup local image file.
     - name: Pull Semaphore container image from repository
@@ -272,3 +278,13 @@
 # Configure Semaphore
 - name: Configure
   ansible.builtin.include_tasks: configure.yml
+
+#########################################################
+## Post-install                                        ##
+#########################################################
+
+# Unset variables
+- name: Unset variables
+  ansible.builtin.set_fact:
+    repository_tag:
+    data_dir:

@@ -4,10 +4,16 @@
 ## Uninstall configuration                             ##
 #########################################################
 
+# Check if data_dir exists, else set default
+- name: Check data_dir folder, set default
+  ansible.builtin.set_fact:
+    data_dir: "/data/nexus"
+  when: data_dir is not defined
+
 # Remove Sonatype Nexus folder
 - name: Remove Sonatype Nexus folder
   ansible.builtin.file:
-    path: /data/nexus/nexus-data
+    path: "{{ data_dir }}/nexus-data"
     state: absent
 
 #########################################################

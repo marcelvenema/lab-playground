@@ -4,10 +4,16 @@
 ## Uninstall                                           ##
 #########################################################
 
+# Check if data_dir exists, else set default
+- name: Check data_dir folder, set default
+  ansible.builtin.set_fact:
+    data_dir: "/data/semaphore"
+  when: data_dir is not defined
+
 # Remove Semaphore config folder
 - name: Remove Semaphore config folder
   ansible.builtin.file:
-    path: /data/semaphore/config
+    path: "{{ data_dir }}/config"
     state: absent
 
 # Remove Semaphore data folder
