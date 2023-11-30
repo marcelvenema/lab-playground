@@ -47,6 +47,7 @@
     action: create_secret_engine
     vault_name: "{{ ansible_fqdn | replace('.', '-') }}"
     vault_description: "Secrets for {{ ansible_fqdn }}"
+    vault_type: "kv"
 
 # Store usernames and passwords in Hashicorp Vault.
 - name: "Store {{ ansible_fqdn }} usernames and passwords in Vault"

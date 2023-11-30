@@ -56,7 +56,12 @@ variables:<br/>
 action: **create_secret_engine**<br/>
 Nader in te vullen.<br/>
 variables:<br/>
-<kbd>(geen)</kbd> : Geen variabelen benodigd.<br/>
+<kbd>vault_address</kbd> : url naar vault adres voor toegang vault, bijvoorbeeld `http://localhost:8081`<br/>
+<kbd>vault_token</kbd> : token voor toegang tot vault.<br/>
+<kbd>vault_name</kbd> : naam secret engine.<br/>
+<kbd>vault_description</kbd> : omschrijving van secret engine.<br/>
+<kbd>vault_type</kbd> : secret engine type, bijvoorbeeld `kv`, `pki`.<br/>
+
 
 
 action: **destroy_secret_engine**<br/>
