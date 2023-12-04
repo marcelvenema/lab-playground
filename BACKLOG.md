@@ -41,7 +41,6 @@
 - Vault service in podman start niet automatisch na reboot. 
 
 - Configuratie van update action.
-- Configuratie van destroy_secret_engine action.
 - Configuratie van destroy_secret action.
 - Configuratie van get_policy action.
 - Configuratie van destroy_policy action.

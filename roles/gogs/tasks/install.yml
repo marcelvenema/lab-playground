@@ -109,6 +109,11 @@
         repository_tag: "latest"
       when: repository_tag is not defined or repository_tag == "" or repository_tag == none
 
+    # Show information message
+    - name: Show information message
+      ansible.builtin.debug:
+        msg: "Download container image from registry, this may take a while..."
+
     # Pull image from repository to local image repository. If failed, lookup local image file.
     - name: Pull Gogs container image from repository
       containers.podman.podman_image:

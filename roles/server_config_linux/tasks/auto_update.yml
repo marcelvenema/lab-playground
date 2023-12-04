@@ -4,6 +4,11 @@
 ## Installation                                        ##
 #########################################################
 
+# Debug messg
+- name: Show message
+  ansible.builtin.debug:
+    msg: "Install auto update packages, this may take a while..."
+
 # Install cockpit packages
 - name: Install auto update package
   ansible.builtin.package:
@@ -13,7 +18,7 @@
 
 # Enable auto update service
 # https://access.redhat.com/solutions/2823901
-- name: Make sure a service unit is running
+- name: Enable auto-update service
   ansible.builtin.systemd:
     enabled: true
     state: started
