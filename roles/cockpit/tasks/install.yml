@@ -73,3 +73,7 @@
 # Configure Cockpit
 - name: Configure
   ansible.builtin.include_tasks: configure.yml
+
+#########################################################
+## Post-install                                        ##
+#########################################################

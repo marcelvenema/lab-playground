@@ -47,7 +47,7 @@
         repository_url: "docker.io/hashicorp/vault"
         # repository_url: "/repository/vault_1.15.0.tar"
         # repository_tag can be a tag or a version. example: 1.15.0 or 1.15.0-beta1. default is 'latest'.
-        repository_tag: "latest"
+        repository_tag: "1.14"
         # data_dir : base folder to store data. example: "/data/vault" # default is /data/vault
         data_dir: "/data/vault"
 

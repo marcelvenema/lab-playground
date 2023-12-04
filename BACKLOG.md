@@ -1,12 +1,10 @@
 
-## Role base-server-config
+## Role server_config_linux
 - Role gebruikt password_hash functie. Ansible geeft deprecation warning, the Python crypt module is deprecated.
 
-
 ## Role cockpit
-- Configuratie van banner tekst.
-- Configure action
-
+- TODO Configuratie van banner tekst.
+- TODO action: configure - her-configuratie van cockpit. terugzetten cockpit.conf en config opnieuw runnen?
 
 ## Role mysql
 - Role wordt nu geinstalleerd, verdere configuratie gewenst.
@@ -23,7 +21,8 @@
 
 
 ## Role podman
-- nader in te vullen.
+- Configuratie configure action.
+
 
 
 ## Role semaphore
@@ -39,9 +38,9 @@
 
 ## Role vault
 - Vault service in podman start niet automatisch na reboot. 
-
-- Configuratie van update action.
-- Configuratie van destroy_secret_engine action.
+- Configuratie update action.
+- Installatie op k3s
+- Installatie op host
 - Configuratie van destroy_secret action.
 - Configuratie van get_policy action.
 - Configuratie van destroy_policy action.
