@@ -4,6 +4,11 @@
 ## Installation                                        ##
 #########################################################
 
+# Debug messg
+- name: Show message
+  ansible.builtin.debug:
+    msg: "Install auto update packages, this may take a while..."
+
 # Install cockpit packages
 - name: Install auto update package
   ansible.builtin.package:
