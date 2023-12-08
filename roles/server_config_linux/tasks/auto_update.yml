@@ -13,7 +13,7 @@
 
 # Enable auto update service
 # https://access.redhat.com/solutions/2823901
-- name: Make sure a service unit is running
+- name: Restart auto update service
   ansible.builtin.systemd:
     enabled: true
     state: started

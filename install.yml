@@ -47,7 +47,7 @@
         repository_url: "docker.io/hashicorp/vault"
         # repository_url: "/repository/vault_1.15.0.tar"
         # repository_tag can be a tag or a version. example: 1.15.0 or 1.15.0-beta1. default is 'latest'.
-        repository_tag: "1.14"
+        repository_tag: 1.14.8
         # data_dir : base folder to store data. example: "/data/vault" # default is /data/vault
         data_dir: "/data/vault"
 
@@ -60,7 +60,7 @@
         admin_password: "{{ lab_password }}"
         admin_email: "{{ lab_email }}"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
-        # vault_token: <token>                                      not neccecary if vault is installed on the same server
+        # vault_token: <token>, not neccecary if vault is installed on the same server
 
     - role: mysql
       become: true
@@ -70,7 +70,7 @@
         repository_url: "docker.io/mysql/mysql-server"
         repository_tag: "latest"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
-        # vault_token: <token>                                      not neccecary if vault is installed on the same server
+        # vault_token: <token>, not neccecary if vault is installed on the same server
 
     - role: semaphore
       become: true
@@ -81,7 +81,7 @@
         semaphore_admin_password: "{{ lab_password }}"
         semaphore_admin_email: "{{ lab_email }}"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
-        # vault_token: <token>                                      not neccecary if vault is installed on the same server
+        # vault_token: <token>, not neccecary if vault is installed on the same server
 
     - role: gogs
       become: true
@@ -89,7 +89,7 @@
         action: install
         repository_url: "docker.io/gogs/gogs"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
-        # vault_token: <token>                                      not neccecary if vault is installed on the same server
+        # vault_token: <token>, not neccecary if vault is installed on the same server
 
     - role: nexus_repository
       become: true
@@ -98,4 +98,16 @@
         # repository url can be a url to repository or a local file. example: docker.io/sonatype/nexus3 or /tmp/nexus_<version>.tar
         repository_url: "docker.io/sonatype/nexus3"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
-        # vault_token: <token>                                      not neccecary if vault is installed on the same server
+        # vault_token: <token>, not neccecary if vault is installed on the same server
+                                        
+  tasks:
+    - name: Show information message
+      debug:
+        msg:
+          - "Lab server installation completed..."
+          - "Cockpit can be accessed at https://{{ admin_hostname }}:9090. Username is {{ lab_username }} and password is {{ lab_password }}."
+          - "Hashicorp Vault can be accessed at https://{{ admin_hostname }}:8200. Unseal keys are stored at /data/vault/config/unseal_keys. Root token is stored at /data/vault/config/vault_token. Value: {{ vault_token }}"
+          - "Semaphore can be accessed at https://{{ admin_hostname }}:3000 with username {{ lab_username }} and password {{ lab_password }}."
+          - "Gogs can be accessed at http://{{ admin_hostname }}:3001"
+          - "Sonatype Nexus Repository OSS can be accessed at http://{{ admin_hostname }}:8081"
+

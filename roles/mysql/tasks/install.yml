@@ -92,6 +92,10 @@
   no_log: true
 
 #########################################################
+## Installation                                        ##
+#########################################################
+
+#########################################################
 ## Installation on podman                              ##
 #########################################################
 
@@ -110,6 +114,11 @@
       when:
         - repository_tag is not defined or repository_tag == "" or repository_tag == none
 
+    # Show information
+    - name: Show information
+      ansible.builtin.debug:
+        msg: "Get container image from registry. this may take a while..."
+
     # Pull image from repository to local image repository. If failed, lookup local image file.
     - name: "Pull MySQL container image from repository {{ repository_url}}:{{ repository_tag }}"
       containers.podman.podman_image:
@@ -118,60 +127,57 @@
       register: pull_result
       ignore_errors: true
 
-    # repository_url is a local container file, check if file exists
-    - name: Check if repository_url is a local container file
-      ansible.builtin.stat:
-        path: "{{ repository_url }}"
-      register: repository_url_result
-      delegate_to: localhost
+    - name: Install local image file
       when: pull_result is failed
+      block:
 
-    # Fail if image file not found
-    - name: Fail if MySQL container image file not found
-      fail:
-        msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
-      when: 
-        - pull_result is failed
-        - repository_url_result.stat.exists == false
+        # repository_url is a local container file, check if file exists on ansible host
+        - name: Check if repository_url is a local container file
+          ansible.builtin.stat:
+            path: "{{ repository_url }}"
+          register: repository_url_result
+          delegate_to: localhost
 
-    # Copy image file to destination
-    - name: Copy MySQL container image file to destination
-      ansible.builtin.copy:
-        src: "{{ repository_url }}"
-        dest: "/tmp/mysql.tar"
-        mode: '0644'
-      when: pull_result is failed
+        # Fail if image file not found
+        - name: Fail if MySQL container image file not found
+          ansible.builtin.fail:
+            msg: "Repository URL {{ repository_url }} not found. Container image file location not found. Cannot continue..."
+          when: 
+            - repository_url_result.stat.exists == false
 
-    # Load image from file if pull failed
-    - name: Import MySQL container image to podman
-      ansible.builtin.command: podman load -i /tmp/mysql.tar
-      register: import_result
-      when: pull_result is failed
+        # Copy image file to destination
+        - name: Copy MySQL container image file to destination
+          ansible.builtin.copy:
+            src: "{{ repository_url }}"
+            dest: "/tmp/mysql.tar"
+
+        # Load image from file if pull failed
+        - name: Import container image to podman
+          ansible.builtin.command: podman load -i /tmp/mysql.tar
+          register: import_result
+
+        # Cleanup image file
+        - name: Cleanup container image file
+          ansible.builtin.file:
+            path: /tmp/mysql.tar
+            state: absent
 
     # Get image info from podman
-    - name: Gather info on MySQL container image
+    - name: Gather info on container image
       containers.podman.podman_image_info:
-        name: mysql-server
-      register: image_info_result
+      register: images_info
 
-    # Get Id from image info
-    - name: Get Id from image info
+    # Find image id
+    - name: Parse image info, select container image id
       ansible.builtin.set_fact:
-        image_id: "{{ image_info_result.images[0].Id[:12] }}"
-
-    # Cleanup image file
-    - name: Cleanup container image file
-      ansible.builtin.file:
-        path: /tmp/mysql.tar
-        state: absent
-      when: pull_result is failed
+        image_id: "{{ images_info.images | selectattr('RepoTags', 'search', 'mysql') | map(attribute='Id') | first }}"
 
     ##################################
     # Create MySQL container         #
     ##################################
 
     # Create MySQL pod
-    - name: Create MySQL pod
+    - name: "Create Oracle MySQL container with id {{ image_id }}..."
       containers.podman.podman_container:
         name: mysql
         image: "{{ image_id }}"
@@ -191,6 +197,11 @@
         no_header: true
         dest: /etc/systemd/system/podman-mysql.service
   
+    # Clear variables
+    - name: Clear variables
+      ansible.builtin.set_fact:
+        image_info_result:
+
 #########################################################
 ## Installation MySQL on kubernetes                    ##
 #########################################################

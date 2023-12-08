@@ -9,11 +9,4 @@
   ansible.builtin.package:
     name: podman
     state: absent
-  when: ansible_pkg_mgr == 'yum'
 
-# Uninstall Podman       
-- name: Uninstall Podman on Ubuntu
-  ansible.builtin.apt:
-    name: podman
-    state: absent
-  when: ansible_pkg_mgr == 'apt'
