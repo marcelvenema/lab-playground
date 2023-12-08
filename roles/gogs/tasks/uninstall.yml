@@ -8,7 +8,7 @@
 - name: Check data_dir folder, set default
   ansible.builtin.set_fact:
     data_dir: "/data/gogs"
-  when: data_dir is not defined
+  when: data_dir is not defined or data_dir == "" or data_dir == none
 
 # Remove Gogs folder
 - name: Remove Gogs folder

@@ -8,7 +8,7 @@
 - name: Check data_dir folder, set default
   ansible.builtin.set_fact:
     data_dir: "/data/semaphore"
-  when: data_dir is not defined
+  when: data_dir is not defined or data_dir == "" or data_dir == none
 
 # Remove Semaphore config folder
 - name: Remove Semaphore config folder
@@ -19,7 +19,7 @@
 # Remove Semaphore data folder
 - name: Remove Semaphore data folder
   ansible.builtin.file:
-    path: /data/semaphore/data
+    path: "{{ data_dir }}/data"
     state: absent
 
 # Remove Semaphore container
@@ -27,14 +27,4 @@
   containers.podman.podman_container:
     name: semaphore
     state: absent
-
-# Remove MySQL container
-- name: Remove MySQL container
-  containers.podman.podman_container:
-    name: mysql
-    state: absent
-
-# Remove Ansible pod
-- name: Remove Ansible pod
-  ansible.builtin.command: podman pod rm ansible -f
     

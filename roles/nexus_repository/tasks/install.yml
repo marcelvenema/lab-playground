@@ -159,7 +159,7 @@
     # Find image id
     - name: Parse image info, select container image id
       ansible.builtin.set_fact:
-        image_id: "{{ images_info.images | selectattr('RepoTags', 'search', 'nexus') | map(attribute='Id') | first }}"
+        image_id: "{{ images_info.images | selectattr('RepoTags', 'search', 'nexus3') | map(attribute='Id') | first }}"
 
     ##################################
     # Create Nexus container         #

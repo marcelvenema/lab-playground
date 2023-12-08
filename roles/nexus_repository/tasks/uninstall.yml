@@ -8,7 +8,7 @@
 - name: Check data_dir folder, set default
   ansible.builtin.set_fact:
     data_dir: "/data/nexus"
-  when: data_dir is not defined
+  when: data_dir is not defined or data_dir == "" or data_dir == none
 
 # Remove Sonatype Nexus folder
 - name: Remove Sonatype Nexus folder
@@ -25,7 +25,7 @@
   block:
 
     # Check if Nexus pod is present
-    - name: Check if Nexus pod is present
+    - name: Check if Nexus Repository container is present
       containers.podman.podman_container_info:
         name: nexus
       register: nexus_pod_info

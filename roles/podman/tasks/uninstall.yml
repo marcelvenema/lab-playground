@@ -10,3 +10,15 @@
     name: podman
     state: absent
 
+# Delete podman files
+- name: Delete Podman files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/containers
+    - /etc/containers/registries.conf
+    - /etc/containers/registries.d
+    - /etc/containers/storage.conf
+    - /etc/containers/storage.conf
+    - /etc/containers

@@ -83,8 +83,6 @@
     tasks_from: secret_engine.yml
   vars:
     action: create_secret_engine
-    vault_address: "http://192.168.11.22:8200"
-    vault_token: "hvs.5XYaP4XJwdV5FqeJpQalQRXr"
     vault_name: "certificates"
     vault_description: "Certificates secrets store"
     vault_type: "pki"
