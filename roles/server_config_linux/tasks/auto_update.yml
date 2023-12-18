@@ -1,7 +1,7 @@
 ---
 
 #########################################################
-## Installation                                        ##
+## Auto Update                                         ##
 #########################################################
 
 # Debug messg
@@ -15,11 +15,29 @@
     name:
       - dnf-automatic
     state: present
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
 
-# Enable auto update service
+# Install cockpit packages on Ubuntu
+- name: Install auto update package
+  ansible.builtin.package:
+    name:
+      - unattended-upgrades
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+# Enable auto update service on rhel
 # https://access.redhat.com/solutions/2823901
 - name: Restart auto update service
   ansible.builtin.systemd:
     enabled: true
     state: started
     name: dnf-automatic-install.timer
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+# Enable auto update service on ubuntu
+- name: Restart auto update service
+  ansible.builtin.systemd:
+    enabled: true
+    state: started
+    name: unattended-upgrades.service
+  when: ansible_distribution == "Ubuntu"

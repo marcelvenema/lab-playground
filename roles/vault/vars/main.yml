@@ -83,6 +83,23 @@ actions:
   - unseal_description : "Unseal Vault zodat deze gereed is voor gebruik."
   - unseal_icon : "media/icon_vault.png"
 
+  # ----------------------------------------
+  - get_certificate
+  - get_certificate_description : "Haal de configuratie van een certificaat op."
+  - get_certificate_icon : "media/icon_vault.png"
+
+  - create_certificate
+  - create_certificate_description : "Maak een certificaat aan."
+  - create_certificate_icon : "media/icon_vault.png"
+
+  - destroy_certificate
+  - destroy_certificate_description : "Verwijder een certificaat."
+  - destroy_certificate_icon : "media/icon_vault.png"
+
+  - revoke_certificate
+  - revoke_certificate_description : "Revoke een certificaat."
+  - revoke_certificate_icon : "media/icon_vault.png"
+
 
 
 install_properties:

@@ -1,0 +1,197 @@
+---
+
+#########################################################
+## Hashicorp Vault PKI Certificates module             ##
+#########################################################
+
+# Validate global variables for Hashicorp Vault secrets module.
+- name: Validate global variables for Hashicorp Vault certificates module.
+  ansible.builtin.assert:
+    that: "{{ varitem }} is defined"
+    fail_msg: "Required variable '{{ varitem }}' has not been provided."
+    quiet: true
+  loop_control:
+    loop_var: varitem
+  loop: 
+    - vault_address
+    - vault_token
+
+
+#########################################################
+## Get certificate                                     ##
+#########################################################
+
+- name: Get Vault certificate
+  when: action == "get_certificate"
+  block:
+
+    # Register var_result variable
+    - name: Register var_result variable
+      ansible.builtin.set_fact:
+        var_result: "{{ var_result }}"
+      no_log: true
+      when: var_result is not defined
+
+    # Clear variable var_result, be sure it is not used from a previous run.
+    - name: Clear variable var_result
+      ansible.builtin.set_fact:
+        var_result: ""
+      no_log: true
+
+    # Validate local variables
+    - name: Validate variables for Vault create certificate.
+      ansible.builtin.assert:
+        that: "{{ varitem }} is defined"
+        fail_msg: "Required variable '{{ varitem }}' has not been provided."
+        quiet: true
+      loop_control:
+        loop_var: varitem
+      loop: 
+        - vault_name
+
+
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Get Vault certificate"
+
+    # Stop playbook when action is not defined.
+    - name: Stop playbook
+      ansible.builtin.fail:
+        msg: "Action is not defined."
+
+
+#########################################################
+## Create certificate                                  ##
+#########################################################
+
+- name: Create Vault certificate
+  when: action == "create_certificate"
+  block:
+
+    # Register var_result variable
+    - name: Register var_result variable
+      ansible.builtin.set_fact:
+        var_result: "{{ var_result }}"
+      no_log: true
+      when: var_result is not defined
+
+    # Clear variable var_result, be sure it is not used from a previous run.
+    - name: Clear variable var_result
+      ansible.builtin.set_fact:
+        var_result: ""
+      no_log: true
+
+    # Validate local variables
+    - name: Validate variables for Vault create certificate.
+      ansible.builtin.assert:
+        that: "{{ varitem }} is defined"
+        fail_msg: "Required variable '{{ varitem }}' has not been provided."
+        quiet: true
+      loop_control:
+        loop_var: varitem
+      loop: 
+        - vault_name
+
+
+
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Create Vault certificate"
+
+    # Stop playbook when action is not defined.
+    - name: Stop playbook
+      ansible.builtin.fail:
+        msg: "Action is not defined."
+
+
+
+#########################################################
+## Destroy certificate                                 ##
+#########################################################
+
+- name: Destroy Vault certificate
+  when: action == "destroy_certificate"
+  block:
+
+    # Register var_result variable
+    - name: Register var_result variable
+      ansible.builtin.set_fact:
+        var_result: "{{ var_result }}"
+      no_log: true
+      when: var_result is not defined
+
+    # Clear variable var_result, be sure it is not used from a previous run.
+    - name: Clear variable var_result
+      ansible.builtin.set_fact:
+        var_result: ""
+      no_log: true
+
+    # Validate local variables
+    - name: Validate variables for Vault create certificate.
+      ansible.builtin.assert:
+        that: "{{ varitem }} is defined"
+        fail_msg: "Required variable '{{ varitem }}' has not been provided."
+        quiet: true
+      loop_control:
+        loop_var: varitem
+      loop: 
+        - vault_name
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Destroy Vault certificate"
+
+    # Stop playbook when action is not defined.
+    - name: Stop playbook
+      ansible.builtin.fail:
+        msg: "Action is not defined."
+
+
+
+#########################################################
+## Revoke certificate                                  ##
+#########################################################
+
+- name: Revoke Vault certificate
+  when: action == "revoke_certificate"
+  block:
+
+    # Register var_result variable
+    - name: Register var_result variable
+      ansible.builtin.set_fact:
+        var_result: "{{ var_result }}"
+      no_log: true
+      when: var_result is not defined
+
+    # Clear variable var_result, be sure it is not used from a previous run.
+    - name: Clear variable var_result
+      ansible.builtin.set_fact:
+        var_result: ""
+      no_log: true
+
+    # Validate local variables
+    - name: Validate variables for Vault create certificate.
+      ansible.builtin.assert:
+        that: "{{ varitem }} is defined"
+        fail_msg: "Required variable '{{ varitem }}' has not been provided."
+        quiet: true
+      loop_control:
+        loop_var: varitem
+      loop: 
+        - vault_name
+
+    # Debug message
+    - name: Debug message
+      ansible.builtin.debug:
+        msg: "Revoke Vault certificate"
+
+    # Stop playbook when action is not defined.
+    - name: Stop playbook
+      ansible.builtin.fail:
+        msg: "Action is not defined."
+
