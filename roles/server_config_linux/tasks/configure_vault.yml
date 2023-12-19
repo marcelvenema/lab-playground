@@ -91,36 +91,3 @@
 ## Create PKI root certificate                         ##
 #########################################################
 
-# Create PKI root certificate from Vault
-- name: Create PKI root certificate from Vault
-  ansible.builtin.include_role:
-    name: vault
-    tasks_from: certificates.yml
-  vars:
-    action: create_certificate
-    vault_name: "pki"
-    pki_name: "{{ ansible_fqdn | replace('.', '-') }}"
-    pki_ttl: "87600h"
-    pki_max_ttl: "43800h"
-    pki_ou: "IT"
-    pki_country: "BE"
-    pki_province: "Antwerp"
-    pki_locality: "Antwerp"
-    pki_street_address: "Street 1"
-    pki_postal_code: "2000"
-    pki_serial_number: "1234567890"
-    pki_is_ca: "true"
-    pki_key_type: "rsa"
-    pki_key_bits: "4096"
-    pki_key_usage: "cert_sign,crl_sign"
-    pki_ext_key_usage: "server_auth,client_auth"
-    pki_server_flag: "true"
-    pki_client_flag: "true"
-    pki_code_signing_flag: "false"
-    pki_email_protection_flag: "false"
-    pki_ocsp_signing_flag: "false"
-    pki_issuing_certificate_url: "http://{{ ansible_fqdn }}:8200/v1/pki/ca"
-    pki_crl_distribution_points: "http://{{ ansible_fqdn }}:8200/v1/pki/crl"
-    pki_ttl: "87600h"
-    pki_max_ttl: "43800h"
-
