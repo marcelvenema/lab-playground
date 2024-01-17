@@ -60,13 +60,24 @@ Het playbook wordt gebruikt voor de configuratie van een lab server met een aant
 De Ansible Development server wordt gebruikt om de code te kopieren (clone) vanuit git en het ansible playbook te starten. Geadviseerd wordt een Linux VM met min. 2 vCPU en 3GB intern geheugen. De diskruimte is 20GB.<br/>
 
 Voorbereidingen Ansible Development server:<br/>
+Installatie besturingssysteem:<br/> Het OS kan Ubuntu, RedHat Enterprise Linux, RockyLinux of een andere Linux variant zijn. RockyLinux heeft een lichte voorkeur omdat de codebase gelijk is aan RedHat zonder subscriptions.<br>
+RockyLinux:<br/> 
+Installation Destination :Automatic partitioning.<br/>
+Software Selection: Minimal Install<br/>
+KDump : Disabled<br/>
+Root Password : Set root password, allow root SSH login with password<br/>
+Network & Hostname : Set network IP address<br/>
+
+
+
+Configuratie:<br/>
 Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
 epel-release: prerequisite voor ansible, tar: voor configuratie visual studio code remote ssh, nano: eenvoudige editor.<br/>
 Installeer git en ansible: `dnf install ansible git`.<br/>
-configureer git: `git config --global user.name "<github username>` en `git config --global user.email "<github email>`.<br/>
+Configureer git: `git config --global user.name "<github username>` en `git config --global user.email "<github email>`.<br/>
 Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br/>
 kopieer de publieke sleutel en kopieer naar github settings.<br/>
-test git connectie: `ssh -T git@github.com`<br/>
+Test git connectie: `ssh -T git@github.com`<br/>
 
 
 Clone lab-playground repository: `git clone <adres>`..<br/>
