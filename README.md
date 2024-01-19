@@ -8,7 +8,7 @@ Playbook voor installatie en configuratie van een development lab server, als ba
 ***
 
 
-Het playbook installeert de volgende rollen:
+Het playbook installeert en configureert de volgende rollen:
 
 - **RedHat Cockpit**<br/>
   Browser-gebaseerde beheeromgeving voor Linux. Toegang via `http://<hostname>:9090`.<br/>
@@ -44,18 +44,17 @@ Het playbook installeert de volgende rollen:
   Artifact repository. Geinstalleerd als container, benaderbaar via `http://<hostname>:8081`.<br/>
   User name is admin, initiele wachtwoord is opgeslagen in Vault.<br/>
   Zie ook role [nexus_repository](roles/nexus_repository/README.md)<br/>
-
-
+<br/>
 
 Overzicht [ontwerp](docs/DESIGN.md)<br/>
 
 ***
 
 # Voorbereidingen
-Het playbook wordt gebruikt voor de configuratie van een lab server met een aantal geinstalleerde podman containers als Vault, Nexus Repository, MySQL, Semaphore en Gogs. Een voorbeeld typische infrastructuur is een **Ansible Development server** en **Lab Playground server**.<br/> 
+Een voorbeeld om de lab-playground te gebruiken is een infrastructuur met twee virtuele machines: een **Ansible Development server** en een **Lab Playground server**.<br/> 
+Het playbook wordt gebruikt om vanaf de Ansible development server een lab server te installeren en configureren met een aantal podman containers als Vault, Nexus Repository, MySQL, Semaphore en Gogs.<br/>
 
 ## Virtuele Machines
-
 **Ansible Development server**<br/>
 De Ansible Development server wordt gebruikt om de code te kopieren (clone) vanuit git en het ansible playbook te starten. Geadviseerd wordt een Linux VM met min. 2 vCPU en 3GB intern geheugen. De diskruimte is 20GB.<br/>
 
@@ -68,33 +67,34 @@ KDump : Disabled<br/>
 Root Password : Set root password, allow root SSH login with password<br/>
 Network & Hostname : Set network IP address<br/>
 
-
-
-Configuratie:<br/>
+Configuratie na OS installatie:<br/>
 Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
 epel-release: prerequisite voor ansible, tar: voor configuratie visual studio code remote ssh, nano: eenvoudige editor.<br/>
 Installeer git en ansible: `dnf install ansible git`.<br/>
 Configureer git: `git config --global user.name "<github username>` en `git config --global user.email "<github email>`.<br/>
 Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br/>
-kopieer de publieke sleutel en kopieer naar github settings.<br/>
+kopieer de publieke sleutel en kopieer naar github/gitlab settings.<br/>
 Test git connectie: `ssh -T git@github.com`<br/>
 
 
 Clone lab-playground repository: `git clone <adres>`..<br/>
-Installeer Ansible Galaxy collections via `sh requirements.sh`.<br/>
-Controleer de variabelen in het `group_vars/all.yml` bestand en wijzig deze indien nodig.<br/>
-Controleer de ip-adressen in het `inventory/hosts.yml` bestand en wijzig deze indien nodig.<br/> 
-
+Controleer het ip-adres van de lab server in het `inventory.yml` bestand en wijzig deze indien nodig.<br/> 
+Controleer de variabelen in het `install.yml` bestand en wijzig deze indien nodig.<br/>
 
 **Lab Playground server**<br/>
 De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linux virtuele machine met 2 vCPU en 4GB geheugen. Geadviseerd wordt een diskruimte van 200Gb ivm mogelijke repository data.<br/>
 
 
 
+## Afhankelijkheden
+Afhankelijkheden zijn benoemd in het requirements.yml bestand. Gebruik `ansible-galaxy install ./requirements.yml --force` voor installatie.<br/>
+
+
+
 # Installatie
 Installatie van het playbook kan via onderstaande commandline. De -K parameter vraagt om het BECOME wachtwoord.<br/>
 ```bash
-ansible-playbook install.yml -i inventory/hosts.yml -K
+ansible-playbook install.yml -i inventory.yml -K
 ```
 
 
@@ -104,17 +104,17 @@ ansible-playbook install.yml -i inventory/hosts.yml -K
 ## Globale variabelen:
 Onderstaande globale variabelen kunnen worden gebruikt:<br/>
 
-- uninstall: true | false<br/>
+- <kbd>uninstall</kbd>: true | false<br/>
   Bij installatie (install) van een role, wordt de role eerst ge-deinstalleerd (uninstall).<br/>
-- lab_hostname: labserver.marcelvenema.com<br/>
-- lab_username: admin<br/>
-- lab_usercomment: "Admin user for Lab environment"<br/>
-- lab_password: Password29!<br/>
-- lab_email: marcel@marcelvenema.com<br/>
+- <kbd>lab_hostname</kbd>: labserver.marcelvenema.com<br/>
+- <kbd>lab_username</kbd>: admin<br/>
+- <kbd>lab_usercomment</kbd>: "Admin user for Lab environment"<br/>
+- <kbd>lab_password</kbd>: Password29!<br/>
+- <kbd>lab_email</kbd>: marcel@marcelvenema.com<br/>
 
-- automation_username: Gedefinieerd in install.yaml<br/>
-- automation_password: not present, will be generated.<br/>
-- automation_email: "ansible@marcelvenema.com"<br/>
+- <kbd>automation_username</kbd>: Gedefinieerd in install.yaml<br/>
+- <kbd>automation_password</kbd>: not present, will be generated.<br/>
+- <kbd>automation_email</kbd>: "ansible@marcelvenema.com"<br/>
 
 
 # Licentie

@@ -2,8 +2,6 @@
 # This is the main installation file to install the lab server
 # It will install the following:
 # - podman, cockpit, hashicorp vault, semaphore, gogs, nexus repository
-#
-#
 
 - name: Install Lab Playground server
   hosts: lab_server
@@ -67,8 +65,8 @@
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/mysql/mysql-server or /tmp/mysql_<version>.tar
-        # repository_url: "docker.io/mysql/mysql-server"
-        repository_url: "/repository/mysql_8.1.0.tar"
+        repository_url: "docker.io/mysql/mysql-server"
+        # repository_url: "/repository/mysql_8.1.0.tar"
         # repository_tag: "latest"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>, not neccecary if vault is installed on the same server
@@ -77,8 +75,8 @@
       become: true
       vars:
         action: install
-        # repository_url: "docker.io/semaphoreui/semaphore"
-        repository_url: "/repository/semaphore_v2.9.37.tar"
+        repository_url: "docker.io/semaphoreui/semaphore"
+        # repository_url: "/repository/semaphore_v2.9.37.tar"
         semaphore_admin_username: "{{ lab_username }}"
         semaphore_admin_password: "{{ lab_password }}"
         semaphore_admin_email: "{{ lab_email }}"
@@ -89,8 +87,8 @@
       become: true
       vars:
         action: install
-        # repository_url: "docker.io/gogs/gogs"
-        repository_url: "/repository/gogs_0.13.tar"
+        repository_url: "docker.io/gogs/gogs"
+        # repository_url: "/repository/gogs_0.13.tar"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>, not neccecary if vault is installed on the same server
 
@@ -99,8 +97,8 @@
       vars:
         action: install
         # repository url can be a url to repository or a local file. example: docker.io/sonatype/nexus3 or /tmp/nexus_<version>.tar
-        # repository_url: "docker.io/sonatype/nexus3"
-        repository_url: "/repository/nexus_3.61.0.tar"
+        repository_url: "docker.io/sonatype/nexus3"
+        # repository_url: "/repository/nexus_3.61.0.tar"
         # vault_address: <address>, example: https://localhost:8200 not neccecary if vault is installed on the same server
         # vault_token: <token>, not neccecary if vault is installed on the same server
                                         
