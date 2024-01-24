@@ -87,7 +87,7 @@ De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linu
 
 
 ## Afhankelijkheden
-Afhankelijkheden zijn benoemd in het requirements.yml bestand. Gebruik `ansible-galaxy install ./requirements.yml --force` voor installatie.<br/>
+Afhankelijkheden zijn benoemd in het requirements.yml bestand. Gebruik `ansible-galaxy install -r requirements.yml --force` voor installatie.<br/>
 
 
 
