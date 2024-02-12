@@ -83,7 +83,13 @@ Controleer de variabelen in het `install.yml` bestand en wijzig deze indien nodi
 
 **Lab Playground server**<br/>
 De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linux virtuele machine met 2 vCPU en 4GB geheugen. Geadviseerd wordt een diskruimte van 200Gb ivm mogelijke repository data.<br/>
+Aanmaken ansible user:<br/>
+```
+useradd ansible
+passwd ansible
+usermod -aG wheel ansible
 
+```
 
 
 ## Afhankelijkheden
