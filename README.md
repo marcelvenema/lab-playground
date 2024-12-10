@@ -1,52 +1,40 @@
-# Lab Playground development server
+# Lab Playground Development server
 
 ***
 
 <img src="media/banner_lab.png" align="left"/>
-Playbook voor installatie en configuratie van een development lab server, als basis voor het ontwikkelen van een moderne infrastructuur. Automatische installatie en configuratie van o.a. Ansible, GitLab, Semaphore, Hashicorp Vault en Nexus Repository OSS.
+Ansible playbook to install and configure a development lab playground server. It will automatically install Ansible, Git, Hashicorp Vault, and Nexus Repository OSS. This serves as a foundation for an infrastructure-as-code playground environment.
+Use this playground to learn and play with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible roles to become an Ansible master.
 
 ***
 
-
-Het playbook installeert en configureert de volgende rollen:
+The play installs and configures the following applications using Ansible roles:
 
 - **RedHat Cockpit**<br/>
-  Browser-gebaseerde beheeromgeving voor Linux. Toegang via `http://<hostname>:9090`.<br/>
-  Gebruikersnaam en wachtwoord worden gedefinieerd tijdens installatie via lab_username en lab_password variabelen.<br/>
-  Zie ook role [cockpit](roles/cockpit/README.md)<br/>
+  Browser-based management interface for Linux. Access via `http://<hostname>:9090`.<br/>
+  Username and password are defined during installation via variables 'lab_username' and 'lab_password'.<br/>
+  See also role [cockpit](roles/cockpit/README.md)<br/>
 
 - **Podman container infrastructure**<br/>
-  Container infrastructuur. Kan worden beheerd via de Cockpit user interface.<br/>
-  Zie ook role [podman](roles/podman/README.md)<br/>
+  Container infrastructure. Can be managed via the Cockpit user interface.<br/>
+  See also role [podman](roles/podman/README.md)<br/>
 
 - **Hashicorp Vault**<br/>
-  Secret management. Geinstalleerd als container, benaderbaar via `http://<hostname>:8200`.<br/>
-  Access token en unseal keys zijn opgeslagen in /data/vault/config folder.<br/>
-  Zie ook role [vault](roles/vault/README.md)<br/>
+  Secret management. Installed as a container, accessible via `http://<hostname>:8200`.<br/>
+  Access token and unseal keys are stored in /data/vault/config folder.<br/>
+  See also role [vault](roles/vault/README.md)<br/>
 
 - **Server-Config-Linux**<br/>
-  Basis server configuratie rol met o.a configuratie automation account, configuratie tijdzone, base-server-config in Vault, etc.<br/>
-  Zie ook role [server_config_linux](roles/server_config_linux/README.md)<br/>
-
-- **MySQL**<br/>
-  Installatie en configuratie van MySQL server. UNDER DEVELOPMENT.<br/>
-  Zie ook role [mysql](roles/mysql/README.md)<br/>
-
-- **Ansible Semaphore**<br/>
-  Grafische interface voor Ansible. Geinstalleerd als container, benaderbaar via `http://<hostname>:3000`.<br/>
-  Zie ook role [semaphore](roles/semaphore/README.md)<br/>
-
-- **Gogs - Git service**<br/>
-  Geinstalleerd als container, benaderbaar via `http://<hostname>:10880`.<br/>
-  Zie ook role [gogs](roles/gogs/README.md)<br/>
+  Basic server configuration role including configuration of the automation account, timezone configuration, base-server-config in Vault, etc.<br/>
+  See also role [server_config_linux](roles/server_config_linux/README.md)<br/>
 
 - **Sonatype Nexus Repository OSS**<br/>
-  Artifact repository. Geinstalleerd als container, benaderbaar via `http://<hostname>:8081`.<br/>
-  User name is admin, initiele wachtwoord is opgeslagen in Vault.<br/>
-  Zie ook role [nexus_repository](roles/nexus_repository/README.md)<br/>
+  Artifact repository. Installed as a container, accessible via `http://<hostname>:8081`.<br/>
+  Username is admin, initial password is stored in Vault.<br/>
+  See also role [nexus_repository](roles/nexus_repository/README.md)<br/>
 <br/>
 
-Overzicht [ontwerp](docs/DESIGN.md)<br/>
+Overview [design](docs/DESIGN.md)<br/>
 
 ***
 
