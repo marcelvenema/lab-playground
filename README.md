@@ -4,7 +4,7 @@
 
 <img src="media/banner_lab.png" align="left"/>
 Ansible playbook to install and configure a development lab playground server. It will automatically install Ansible, Git, Hashicorp Vault, and Nexus Repository OSS. This serves as a foundation for an infrastructure-as-code playground environment.
-Use this playground to learn and play with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible roles to become an Ansible master.
+Use this playground to learn and play with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible playbooks and roles to become an Ansible master.
 
 ***
 
@@ -38,46 +38,54 @@ Overview [design](docs/DESIGN.md)<br/>
 
 ***
 
-# Voorbereidingen
-Een voorbeeld om de lab-playground te gebruiken is een infrastructuur met twee virtuele machines: een **Ansible Development server** en een **Lab Playground server**.<br/> 
-Het playbook wordt gebruikt om vanaf de Ansible development server een lab server te installeren en configureren met een aantal podman containers als Vault, Nexus Repository, MySQL, Semaphore en Gogs.<br/>
+# Preparations
+An example of using the lab-playground is an infrastructure with three virtual machines: an **Ansible Development server**, a **Lab Playground server** and a **Test server**.<br/>
+- Ansible Development server: Minimal Linux server to develop and run Ansible playbooks. Mostly used with Visual Studio Code. <br/>
+- Lab Playground server: Minnimal Linux server to host LabServer Playground with Vault and Nexus Repository.<br/>
+- Test server: Minimal Linux server to test Ansible playbooks.<br/>
 
-## Virtuele Machines
-**Ansible Development server**<br/>
-De Ansible Development server wordt gebruikt om de code te kopieren (clone) vanuit git en het ansible playbook te starten. Geadviseerd wordt een Linux VM met min. 2 vCPU en 3GB intern geheugen. De diskruimte is 20GB.<br/>
-
-Voorbereidingen Ansible Development server:<br/>
-Installatie besturingssysteem:<br/> Het OS kan Ubuntu, RedHat Enterprise Linux, RockyLinux of een andere Linux variant zijn. RockyLinux heeft een lichte voorkeur omdat de codebase gelijk is aan RedHat zonder subscriptions.<br>
-RockyLinux:<br/> 
-Installation Destination :Automatic partitioning.<br/>
-Software Selection: Minimal Install<br/>
-KDump : Disabled<br/>
-Root Password : Set root password, allow root SSH login with password<br/>
-Network & Hostname : Set network IP address<br/>
-
-Configuratie na OS installatie:<br/>
-Installeer volgende packages op development server: `dnf install epel-release tar nano`.<br/>
-epel-release: prerequisite voor ansible, tar: voor configuratie visual studio code remote ssh, nano: eenvoudige editor.<br/>
-Installeer git en ansible: `dnf install ansible git`.<br/>
-Configureer git: `git config --global user.name "<github username>` en `git config --global user.email "<github email>`.<br/>
-Maak ssh certificaat aan via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br/>
-kopieer de publieke sleutel en kopieer naar github/gitlab settings.<br/>
-Test git connectie: `ssh -T git@github.com`<br/>
-
-
-Clone lab-playground repository: `git clone <adres>`..<br/>
-Controleer het ip-adres van de lab server in het `inventory.yml` bestand en wijzig deze indien nodig.<br/> 
-Controleer de variabelen in het `install.yml` bestand en wijzig deze indien nodig.<br/>
+## Virtual Machines
 
 **Lab Playground server**<br/>
-De Lab playground omgeving kan via dit playbook geinstalleerd worden op een Linux virtuele machine met 2 vCPU en 4GB geheugen. Geadviseerd wordt een diskruimte van 200Gb ivm mogelijke repository data.<br/>
-Aanmaken ansible user:<br/>
-```
-useradd ansible
-passwd ansible
-usermod -aG wheel ansible
+The Lab Playground server will host the Vault container for secret management and Nexus Repository container to store artifacts. A Linux VM with at least 2 vCPUs and 4GB of memory is recommended. Due to the artifact storage, a disk space of 200GB is recommended.<br/>
+- Operating system installation:<br/> The OS can be Ubuntu, RedHat Enterprise Linux, RockyLinux, or another Linux variant. RockyLinux is slightly preferred because the codebase is the same as RedHat Enterprise Linux but without subscriptions.<br>
+RockyLinux:<br/>
+Create the virtual machine on the hypervisor and boot the RockyLinux Minimal ISO.<br/>
+Select desired language for RockyLinux.<br/>
+Installation Destination: Automatic partitioning.<br/>
+User Creation: Set username to ansible, set password, check 'Make this user administrator'.<br/>
+Root Password: Set root password, allow root SSH login with password.<br/>
+Network & Hostname: Set network IP address.<br/>
+Start installation.<br/>
+- Operating system configuration: none, configuration will be done with playbook.<br/>
 
-```
+
+**Ansible Test server**
+The Ansible test server will host the Vault container for secret management and Nexus Repository container to store artifacts. A Linux VM with at least 2 vCPUs and 4GB of memory is recommended. Due to the artifact storage, a disk space of 200GB is recommended.<br/>
+- Operating system installation: See instructions for Ansible Development Server.<br/>
+- Operating system configuration: none, configuration will be done with playbook.<br/>
+
+
+
+
+**Ansible Development server**<br/>
+The Ansible Development server is used to clone and edit the code from Git and start the Ansible playbook. A Linux VM with at least 2 vCPUs and 3GB of memory is recommended. The disk space should be 20GB.<br/>
+- Operating system installation: See instructions for Ansible Development Server.<br/>
+
+
+
+- Configuration after OS installation:<br/>
+Logon with user ansible and install the following packages on the development server: `sudo dnf install epel-release tar nano`.<br/>
+epel-release: prerequisite for Ansible, tar: for configuring Visual Studio Code remote SSH, nano: simple editor.<br/>
+Install Git and Ansible: `sudo dnf install ansible git`.<br/>
+Configure Git: `git config --global user.name "<GitHub username>"` and `git config --global user.email "<GitHub email>"`.<br/>
+Create SSH certificate via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br/>
+Copy the public key and add it to GitHub/GitLab settings.<br/>
+Test Git connection: `ssh -T git@github.com`<br/>
+
+
+
+
 
 
 ## Afhankelijkheden
@@ -90,7 +98,9 @@ Installatie van het playbook kan via onderstaande commandline. De -K parameter v
 ```bash
 ansible-playbook install.yml -i inventory.yml -K
 ```
-
+Clone lab-playground repository: `git clone <address>`.<br/>
+Check the IP address of the lab server in the `inventory.yml` file and change it if necessary.<br/>
+Check the variables in the `install.yml` file and change them if necessary.<br/>
 
 # Configuratie
 
