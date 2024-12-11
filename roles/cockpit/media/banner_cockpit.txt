@@ -1,2 +1,0 @@
-Custom banner for Cockpit. 
-This is a simple example of how to add a custom banner to Cockpit. The banner is added to the login page and the main page.
