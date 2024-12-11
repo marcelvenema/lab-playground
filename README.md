@@ -99,14 +99,22 @@ ansible-playbook install_lab_core_services.yml -K
 
 
 # Configuration
+Following variables can be configured in the 'install_lab_core_services' playbook:<br/>
+
+<kbd>uninstall</kbd>, true/false, default false. If true, roles will be uninstalled before installation.<br/>
+<kbd>automation_username</kbd>, default 'ansible'. username.<br/> 
+<kbd>automation_password</kbd>, if not provided, password will be generated and stored in Vault.<br/>
+<kbd>automation_email</kbd>, default 'ansible@me.local'. Used during Nexus Repository OSS creation.<br/>
+<kbd>vm_name</kbd>, hostname of VM.<br/>
+<kbd>vault_repository_url</kbd>, default 'docker.io/hashicorp/vault'. 
+<kbd>nexus_repository_url</kbd>, default 'docker.io/sonatype/nexus3'.
+<kbd>nexus_repository_vault_id</kbd>, unique id to identify Nexus Repository instance in Vault.<br/>
 
 
 
-
-
-
-# Licentie
+# License
 MIT<br/>
 
-# Auteur
+
+# Author
 Marcel Venema<br/>
