@@ -1,3 +1,14 @@
-lab_server:
+---
+
+development_server:
   hosts:
-    192.168.29.22 # 29 LAB
+    localhost:
+      ansible_connection: local
+
+lab_playground:
+  hosts:
+    192.168.29.21
+
+lab_core_services:
+  hosts:
+    192.168.29.21

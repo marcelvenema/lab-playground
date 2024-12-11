@@ -77,47 +77,32 @@ Install Git and Ansible: `sudo dnf install ansible git`.<br/>
 
 Create SSH certificate via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br/>
 Copy the SSH key to the Lab Playground Server and Lab Core Services Server: `ssh-copy-id ansible@<ip address Lab Playground Server>` and `ssh-copy-id ansible@<ip address Lab Core Services Server>`.<br/> 
-It is now a good idea to create a snapshot of all the virtual machines so you can revert to the initial state if something goes wrong or you want to start over or try a new project.<br/>  
+
 Configure Git: `git config --global user.name "<GitHub username>"` and `git config --global user.email "<GitHub email>"`.<br/>
-Copy the public key from the Ansible Development Server and add it to GitHub/GitLab settings. <br/>
+Copy the public key from the Ansible Development Server and add it to GitHub/GitLab settings: `nano ~/.ssh/id_ed25519.pub` and copy the key, paste it to Github website User Profile - Settings - SSH and GPG keys. <br/>
 Test Git connection: `ssh -T git@github.com`<br/>
+It is now a good idea to create a snapshot of all the virtual machines so you can revert to the initial state if something goes wrong or you want to start over or try a new project.<br/>  
+
+Clone lab-playground repository: `git clone git@github.com:marcelvenema/lab-playground.git`.<br/>
+Check the IP address of the servers in the `inventory.yml` file and change it if necessary.<br/>
 
 
+# Dependencies
+Dependencies are listed in the requirements.yml file. Use `ansible-galaxy install -r requirements.yml --force` for installation.<br/>
 
 
-
-
-## Dependencies
-Afhankelijkheden zijn benoemd in het requirements.yml bestand. Gebruik `ansible-galaxy install -r requirements.yml --force` voor installatie.<br/>
-
-
-
-# Installatie
-Installatie van het playbook kan via onderstaande commandline. De -K parameter vraagt om het BECOME wachtwoord.<br/>
+# Installation
+Installation of the playbook can be done via the following command line. The -K parameter prompts for the BECOME password.<br/>
 ```bash
-ansible-playbook install.yml -i inventory.yml -K
+ansible-playbook install_lab_core_services.yml -K
 ```
-Clone lab-playground repository: `git clone <address>`.<br/>
-Check the IP address of the lab server in the `inventory.yml` file and change it if necessary.<br/>
-Check the variables in the `install.yml` file and change them if necessary.<br/>
-
-# Configuratie
 
 
-## Globale variabelen:
-Onderstaande globale variabelen kunnen worden gebruikt:<br/>
+# Configuration
 
-- <kbd>uninstall</kbd>: true | false<br/>
-  Bij installatie (install) van een role, wordt de role eerst ge-deinstalleerd (uninstall).<br/>
-- <kbd>lab_hostname</kbd>: labserver.marcelvenema.com<br/>
-- <kbd>lab_username</kbd>: admin<br/>
-- <kbd>lab_usercomment</kbd>: "Admin user for Lab environment"<br/>
-- <kbd>lab_password</kbd>: Password29!<br/>
-- <kbd>lab_email</kbd>: marcel@marcelvenema.com<br/>
 
-- <kbd>automation_username</kbd>: Gedefinieerd in install.yaml<br/>
-- <kbd>automation_password</kbd>: not present, will be generated.<br/>
-- <kbd>automation_email</kbd>: "ansible@marcelvenema.com"<br/>
+
+
 
 
 # Licentie
