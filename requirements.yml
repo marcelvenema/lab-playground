@@ -19,3 +19,15 @@ roles:
     src: ssh://git@github.com/marcelvenema/ansible-role-server-config.git
     version: main
     scm: git
+
+  - name: podman
+    src: ssh://git@github.com/marcelvenema/ansible-role-podman.git
+    version: main
+    scm: git
+
+  - name: cockpit
+    src: ssh://git@github.com/marcelvenema/ansible-role-cockpit.git
+    version: main
+    scm: git
+
+  

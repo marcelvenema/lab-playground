@@ -3,8 +3,7 @@
 ***
 
 <img src="media/banner_lab.png" align="left"/>
-Ansible playbook to install and configure a development lab playground server. It will automatically install Ansible, Git, Hashicorp Vault, and Nexus Repository OSS. This serves as a foundation for an infrastructure-as-code playground environment.
-Use this playground to learn and play with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible playbooks and roles to become an Ansible master.
+An Ansible playbook to install and configure a development lab playground server. It will automatically install Ansible, Git, HashiCorp Vault, and Nexus Repository OSS. This serves as a foundation for an infrastructure-as-code playground environment. Use this playground to learn and experiment with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible playbooks and roles to become proficient in Ansible.
 
 ***
 
@@ -26,12 +25,12 @@ The play installs and configures the following applications using Ansible roles:
 
 - **Server-Config-Linux**<br/>
   Basic server configuration role including configuration of the automation account, timezone configuration, base-server-config in Vault, etc.<br/>
-  See also role [server_config_linux](roles/server_config_linux/README.md)<br/>
+  See also role [server-config](roles/server-config/README.md)<br/>
 
 - **Sonatype Nexus Repository OSS**<br/>
   Artifact repository. Installed as a container, accessible via `http://<hostname>:8081`.<br/>
   Username is admin, initial password is stored in Vault.<br/>
-  See also role [nexus_repository](roles/nexus_repository/README.md)<br/>
+  See also role [nexus-repository](roles/nexus-repository/README.md)<br/>
 <br/>
 
 Overview [design](docs/DESIGN.md)<br/>
@@ -79,7 +78,6 @@ Create SSH certificate via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@ex
 Copy the SSH key to the Lab Playground Server and Lab Core Services Server: `ssh-copy-id ansible@<ip address Lab Playground Server>` and `ssh-copy-id ansible@<ip address Lab Core Services Server>`.<br/> 
 
 Configure Git: `git config --global user.name "<GitHub username>"` and `git config --global user.email "<GitHub email>"`.<br/>
-Copy the public key from the Ansible Development Server and add it to GitHub/GitLab settings: `nano ~/.ssh/id_ed25519.pub` and copy the key, paste it to Github website User Profile - Settings - SSH and GPG keys. <br/>
 Test Git connection: `ssh -T git@github.com`<br/>
 It is now a good idea to create a snapshot of all the virtual machines so you can revert to the initial state if something goes wrong or you want to start over or try a new project.<br/>  
 
@@ -99,18 +97,16 @@ ansible-playbook install_lab_core_services.yml -K
 
 
 # Configuration
-Following variables can be configured in the 'install_lab_core_services' playbook:<br/>
+Following variables can be configured in the `install_lab_core_services` playbook:
 
-<kbd>uninstall</kbd>, true/false, default false. If true, roles will be uninstalled before installation.<br/>
-<kbd>automation_username</kbd>, default 'ansible'. username.<br/> 
-<kbd>automation_password</kbd>, if not provided, password will be generated and stored in Vault.<br/>
-<kbd>automation_email</kbd>, default 'ansible@me.local'. Used during Nexus Repository OSS creation.<br/>
-<kbd>vm_name</kbd>, hostname of VM.<br/>
-<kbd>vault_repository_url</kbd>, default 'docker.io/hashicorp/vault'. 
-<kbd>nexus_repository_url</kbd>, default 'docker.io/sonatype/nexus3'.
-<kbd>nexus_repository_vault_id</kbd>, unique id to identify Nexus Repository instance in Vault.<br/>
-
-
+- **uninstall**: `true`/`false`, default is `false`. If `true`, roles will be uninstalled before installation.
+- **automation_username**: Default is `ansible`. The username for the automation account.
+- **automation_password**: If not provided, a password will be generated and stored in Vault.
+- **automation_email**: Default is `ansible@me.local`. Used during Nexus Repository OSS creation.
+- **vm_name**: Hostname of the VM.
+- **vault_repository_url**: Default is `docker.io/hashicorp/vault`.
+- **nexus_repository_url**: Default is `docker.io/sonatype/nexus3`.
+- **nexus_repository_vault_id**: Unique ID to identify the Nexus Repository instance in Vault.
 
 # License
 MIT<br/>
