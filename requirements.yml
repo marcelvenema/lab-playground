@@ -6,27 +6,27 @@ collections:
 
 roles:
   - name: vault
-    src: ssh://git@github.com/marcelvenema/ansible-role-vault.git
+    src: https://github.com/marcelvenema/ansible-role-vault.git
     version: main
     scm: git
 
   - name: nexus-repository
-    src: ssh://git@github.com/marcelvenema/ansible-role-nexus-repository.git
+    src: https://github.com/marcelvenema/ansible-role-nexus-repository.git
     version: main
     scm: git
 
   - name: server-config
-    src: ssh://git@github.com/marcelvenema/ansible-role-server-config.git
+    src: https://github.com/marcelvenema/ansible-role-server-config.git
     version: main
     scm: git
 
   - name: podman
-    src: ssh://git@github.com/marcelvenema/ansible-role-podman.git
+    src: https://github.com/marcelvenema/ansible-role-podman.git
     version: main
     scm: git
 
   - name: cockpit
-    src: ssh://git@github.com/marcelvenema/ansible-role-cockpit.git
+    src: https://github.com/marcelvenema/ansible-role-cockpit.git
     version: main
     scm: git
 
