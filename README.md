@@ -82,7 +82,7 @@ Test Git connection: `ssh -T git@github.com`<br>
 It is now a good idea to create a snapshot of all the virtual machines so you can revert to the initial state if something goes wrong or you want to start over or try a new project.<br>  
 
 Clone lab-playground repository: `git clone git@github.com:marcelvenema/lab-playground.git`.<br>
-Check the IP address of the servers in the `inventory.yml` file and change it if necessary.<br>
+Check the IP address of the servers in the `hosts.ini` file and change it if necessary.<br>
 
 
 # Dependencies
