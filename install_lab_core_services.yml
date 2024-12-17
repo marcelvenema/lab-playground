@@ -4,7 +4,7 @@
 # - podman, cockpit, hashicorp vault, nexus repository
 
 - name: Install Lab Playground server
-  hosts: "LABCS"
+  hosts: lab_core_services
   become: true
   vars:
     # if uninstall is true, roles will be uninstalled first before installation.
