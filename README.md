@@ -57,19 +57,22 @@ User Creation: Set username to ansible, set password, check 'Make this user admi
 Root Password: Set root password, allow root SSH login with password.<br>
 Network & Hostname: Set network IP address.<br>
 Start installation.<br>
-- Operating system configuration: none, configuration will be done with playbook.<br>
+- Operating system configuration: 
+Create ansible user with `useradd ansible`, set password `passwd ansible` and grant ansible user access to sudo with `usermod -aG wheel ansible`.<br>
+Update OS with `sudo dnf upgrade --all`.<br>
 
 
 **Lab Core Services server**
 The Lab Core Services server will host the Vault container for secret management and Nexus Repository container to store artifacts. A Linux VM with at least 2 vCPUs and 4GB of memory is recommended. Due to the artifact storage, a disk space of 200GB is recommended.<br>
-- Operating system installation: See instructions for Lab Playgrouns server.<br>
-- Operating system configuration: none, configuration will be done with playbook.<br>
+- Operating system installation: See instructions for Lab Playground server.<br>
+- Operating system configuration: See instructions for Lab Playground server.<br>
 
 
 **Ansible Development server**<br>
 The Ansible Development server is used to clone and edit the code from Git and start the Ansible playbook. A Linux VM with at least 2 vCPUs and 3GB of memory is recommended. The disk space should be 20GB.<br>
 - Operating system installation: See instructions for Lab Playground server.<br>
 - Configuration after OS installation:<br>
+See instructions for Lab Playground server.<br>
 Logon with user ansible and install the following packages on the development server: `sudo dnf install epel-release tar nano`.<br>
 epel-release: prerequisite for Ansible, tar: for configuring Visual Studio Code remote SSH, nano: simple editor.<br>
 Install Git and Ansible: `sudo dnf install ansible git`.<br>
