@@ -148,6 +148,20 @@
         nexus_repository_name      : "operating_systems"
         nexus_repository_type      : "raw"
 
+    # Create repository
+    - name: Create repository (containers)...
+      ansible.builtin.include_role:
+        name: nexus-repository
+      vars:
+        action: "create_repository"
+        # nexus_repository_address : "" # defined at playbook level
+        # nexus_repository_username: "" # defined at playbook level
+        # nexus_repository_password: "" # defined at playbook level
+        nexus_repository_vault_id  : "{{ server_hostname }}"
+        nexus_repository_name      : "containers"
+        nexus_repository_type      : "docker"
+
+
     # Information message
     - name: Show information message
       debug:
