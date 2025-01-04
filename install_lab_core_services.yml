@@ -63,7 +63,7 @@
         name: cockpit
       vars:
         action: "install"
-        cockpit_branding_logo: "./media/banner_lab.png"
+        cockpit_branding_logo: "./media/banner_lab_white.png"
 
     - name: Information message
       ansible.builtin.debug:
