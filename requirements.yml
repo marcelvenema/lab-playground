@@ -2,7 +2,6 @@
 
 collections:
   - name: containers.podman
-  - name: community.general
 
 roles:
   - name: vault
