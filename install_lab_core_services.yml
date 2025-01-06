@@ -171,4 +171,4 @@
           - "Vault address: {{ vault_address }} - Vault token: {{ vault_token }}"
           - "Nexus repository: {{ nexus_repository_address }}."
           - "Nexus admin password stored in Vault."
-          - "Nexus repositories created: files, os_templates, operating_systems."
+          - "Nexus repositories created: containers, files, os_templates, operating_systems."
