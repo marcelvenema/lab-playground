@@ -30,7 +30,7 @@
     # Ensure python passlib module is installed on Ansible control node to create password hashes
     - name: Ensure passlib is installed...
       ansible.builtin.command:
-        cmd: "pip3.12 install --user passlib"
+        cmd: "pip3.12 install passlib"
 
 
 - name: Install Lab Playground server
