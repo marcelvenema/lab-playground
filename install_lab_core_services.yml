@@ -23,14 +23,14 @@
       become: true
       ansible.builtin.dnf:
         name:
-          - python3.11
-          - python3.11-pip
+          - python3.12
+          - python3.12-pip
       when: ansible_os_family == "RedHat" 
 
     # Ensure python passlib module is installed on Ansible control node to create password hashes
     - name: Ensure passlib is installed...
       ansible.builtin.command:
-        cmd: "pip3.11 install --user passlib"
+        cmd: "pip3.12 install --user passlib"
 
 
 - name: Install Lab Playground server
