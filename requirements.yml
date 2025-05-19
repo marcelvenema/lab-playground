@@ -4,6 +4,7 @@ collections:
   - name: containers.podman
   - name: ansible.posix
   - name: community.general
+  - name: community.crypto
 
 roles:
   - name: vault
