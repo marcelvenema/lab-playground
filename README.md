@@ -75,7 +75,7 @@ The Ansible Development server is used to clone and edit the code from Git and s
 See instructions for Lab Playground server.<br>
 Logon with user ansible and install the following packages on the development server: `sudo dnf install epel-release tar nano git python3.12 python3.12-pip`.<br>
 tar: for configuring Visual Studio Code remote SSH; nano: simple editor; git: version control system; epel-release, python3.12 and python3.12-pip: prerequisites for Ansible.<br>
-Install Ansible: `python3.12 -m pip install ansible-core==2.18`.<br>
+Install Ansible: `python3.12 -m pip install ansible-core==2.18 passlib`.<br>
 
 Create SSH certificate via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br>
 Copy the SSH key to the Lab Playground Server and Lab Core Services Server: `ssh-copy-id ansible@<ip address Lab Playground Server>` and `ssh-copy-id ansible@<ip address Lab Core Services Server>`.<br> 
