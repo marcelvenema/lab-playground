@@ -1,37 +1,4 @@
 ---
-# This is the main installation file to install the lab core services server
-# It will install the following:
-# - podman, cockpit, hashicorp vault, nexus repository
-
-- name: Install Lab Playground server prerequisites
-  hosts: localhost
-  become: true
-
-  tasks:
-    # Information message
-    - name: Information message
-      ansible.builtin.debug:
-        msg:
-          - "###############################################################"
-          - "###############################################################"
-          - "Install Lab Core Services prerequisites on Ansible control node"
-          - "###############################################################"
-          - "###############################################################"
-
-    # Ensure pip is installed
-    - name: Ensure pip is installed...
-      become: true
-      ansible.builtin.dnf:
-        name:
-          - python3.12
-          - python3.12-pip
-      when: ansible_os_family == "RedHat" 
-
-    # Ensure python passlib module is installed on Ansible control node to create password hashes
-    - name: Ensure passlib is installed...
-      ansible.builtin.command:
-        cmd: "pip3.12 install passlib"
-
 
 - name: Install Lab Playground server
   hosts: lab_core_services
@@ -39,13 +6,7 @@
   vars:
     # if uninstall is true, roles will be uninstalled first before installation.
     uninstall: false
-    automation_username: "ansible"
-    # automation_password: "" # Will be generated and stored in Vault
-    automation_email: "ansible@me.local"
-
     vm_name: "LABCS"
-
-  roles:
 
   tasks:
     # Information message
@@ -66,19 +27,24 @@
           - "First server configuration"
           - "#########################################################"
 
-    # Configure server
-    - name: Configure server first install...
-      ansible.builtin.include_role:
-        name: server-config
-      vars:
-        action: "first_config"
+    # Test for ansible version, recommended version is 2.18+, show warning if version is lower
+    - name: Test for ansible version...
+      ansible.builtin.assert:
+        that: "ansible_version.full is version('2.18', '>=')"
+        fail_msg: "Ansible version is lower than 2.18. Recommended version is 2.18+"
+        quiet: true
+
+    # Set server hostname
+    - name: "Set server hostname..."
+      ansible.builtin.set_fact:
         server_hostname: "{{ vm_name }}.development.local"
 
-    # Register global variable
-    - name: Register global variable (server_hostname)...
-      ansible.builtin.set_fact:
-        server_hostname: "{{ server_hostname }}"
-      delegate_to: localhost
+    # Set hostname
+    - name: "Set hostname to {{ server_hostname }}..."
+      become: true
+      ansible.builtin.hostname:
+        name: "{{ server_hostname }}"
+      when: server_hostname is defined
 
     # Install podman container engine
     - name: Install Podman container engine...
@@ -108,17 +74,12 @@
         name: vault
       vars:
         action: "install"
-        vault_repository_url: "docker.io/hashicorp/vault"
-
-    # Add server config to vault
-    - name: Configure vault
-      ansible.builtin.include_role:
-        name: server-config
-      vars:
-        action: "configure_vault"
-        # automation_username: # set in playbook variables.
-        # automation_password: # set in playbook variables.
-        # automation_email:    # set in playbook variables.
+        vault:
+          container:
+            repository_url: "docker.io/hashicorp/vault"
+            repository_tag: "1.20.2"
+          secrets:
+            secret_name: "{{ server_hostname }}"
 
     - name: Information message
       ansible.builtin.debug:
@@ -133,11 +94,11 @@
         name: nexus-repository
       vars:
         action: "install"
-        nexus_repository_url     : "docker.io/sonatype/nexus3"
-        nexus_repository_vault_id: "{{ server_hostname }}"
-        # automation_username    : "" # defined at playbook level
-        # automation_password    : "" # defined at playbook level
-        # automation_email       : "" # defined at playbook level
+        nexus_repository:
+          container:
+            repository_url: "{{ repository_url }}/containers/nexus3_3.80.0.tar"
+          secrets:
+            secret_name: "{{ server_hostname }}"
 
     # Create repository
     - name: Create repository (files)...
@@ -145,12 +106,11 @@
         name: nexus-repository
       vars:
         action: "create_repository"
-        # nexus_repository_address : "" # defined at playbook level
-        # nexus_repository_username: "" # defined at playbook level
-        # nexus_repository_password: "" # defined at playbook level
-        nexus_repository_vault_id  : "{{ server_hostname }}"
-        nexus_repository_name      : "files"
-        nexus_repository_type      : "raw"
+        nexus_repository_name: "files"
+        nexus_repository_type: "raw"
+        nexus_repository:
+          secrets:
+            secret_name: "{{ server_hostname }}"
 
     # Create repository
     - name: Create repository (os_templates)...
@@ -158,12 +118,11 @@
         name: nexus-repository
       vars:
         action: "create_repository"
-        # nexus_repository_address : "" # defined at playbook level
-        # nexus_repository_username: "" # defined at playbook level
-        # nexus_repository_password: "" # defined at playbook level
-        nexus_repository_vault_id  : "{{ server_hostname }}"
-        nexus_repository_name      : "os_templates"
-        nexus_repository_type      : "raw"
+        nexus_repository_name: "os_templates"
+        nexus_repository_type: "raw"
+        nexus_repository:
+          secrets:
+            secret_name: "{{ server_hostname }}"
 
     # Create repository
     - name: Create repository (operating_systems)...
@@ -171,12 +130,11 @@
         name: nexus-repository
       vars:
         action: "create_repository"
-        # nexus_repository_address : "" # defined at playbook level
-        # nexus_repository_username: "" # defined at playbook level
-        # nexus_repository_password: "" # defined at playbook level
-        nexus_repository_vault_id  : "{{ server_hostname }}"
-        nexus_repository_name      : "operating_systems"
-        nexus_repository_type      : "raw"
+        nexus_repository_name: "operating_systems"
+        nexus_repository_type: "raw"
+        nexus_repository:
+          secrets:
+            secret_name: "{{ server_hostname }}"
 
     # Create repository
     - name: Create repository (containers)...
@@ -184,17 +142,15 @@
         name: nexus-repository
       vars:
         action: "create_repository"
-        # nexus_repository_address : "" # defined at playbook level
-        # nexus_repository_username: "" # defined at playbook level
-        # nexus_repository_password: "" # defined at playbook level
-        nexus_repository_vault_id  : "{{ server_hostname }}"
-        nexus_repository_name      : "containers"
-        nexus_repository_type      : "docker"
-
+        nexus_repository_name: "containers"
+        nexus_repository_type: "docker"
+        nexus_repository:
+          secrets:
+            secret_name: "{{ server_hostname }}"
 
     # Information message
     - name: Show information message
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Installation of Playground Lab Core Services completed..."
           - "Server: {{ server_hostname }}."
