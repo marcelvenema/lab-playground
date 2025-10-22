@@ -1,5 +1,4 @@
 ---
-
 - name: Install Lab Playground server
   hosts: lab_core_services
   become: true
@@ -65,19 +64,18 @@
       ansible.builtin.debug:
         msg:
           - "#########################################################"
-          - "Install Hashicorp Vault secrets management"
+          - "Install Openbao Vault secrets management"
           - "#########################################################"
 
-    # Install Hashicorp Vault
-    - name: Install Hashicorp Vault secret management...
+    # Install Openbao Vault
+    - name: Install Openbao Vault secret management...
       ansible.builtin.include_role:
-        name: vault
+        name: openbao
       vars:
         action: "install"
-        vault:
+        openbao:
           container:
-            repository_url: "docker.io/hashicorp/vault"
-            repository_tag: "1.20.2"
+            repository_url: "docker.io/openbao/openbao"
           secrets:
             secret_name: "{{ server_hostname }}"
 
@@ -96,7 +94,7 @@
         action: "install"
         nexus_repository:
           container:
-            repository_url: "{{ repository_url }}/containers/nexus3_3.80.0.tar"
+            repository_url: "docker.io/sonatype/nexus3"
           secrets:
             secret_name: "{{ server_hostname }}"
 

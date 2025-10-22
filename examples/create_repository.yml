@@ -1,0 +1,19 @@
+---
+- name: Create repository
+  hosts: lab_core_services
+  vars:
+    vault_address: "{{ lookup('ansible.builtin.env', 'VAULT_ADDR', default=Undefined) }}"
+    vault_token: "{{ lookup('ansible.builtin.env', 'VAULT_TOKEN', default=Undefined) }}"
+
+  tasks:
+    # Create repository
+    - name: Create repository (files)...
+      ansible.builtin.include_role:
+        name: nexus-repository
+      vars:
+        action: "create_repository"
+        nexus_repository_name: "yum1"
+        nexus_repository_type: "yum"
+        nexus_repository:
+          secrets:
+            secret_name: "LABCS.development.local"

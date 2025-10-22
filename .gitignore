@@ -1,4 +1,29 @@
 
+# Ignore any private keys or certificates
+*.pem
+*.key
+*.crt
+
+# Molecule artifacts for testing
+.molecule/
+
+# Python virtual environment
+venv/
+.env/
+.env
+
+# Inventory files
+inventory/
+inventory.yml
+hosts.ini
 hosts.yml
-collections/
+
+# Ansible galaxy roles
 roles/
+collections/
+!roles/requirements.yml
+
+.vscode/
+.code-workspace
+
+.ansible

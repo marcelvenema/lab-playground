@@ -1,69 +1,98 @@
-# Lab Playground Server design
+# Lab Playground platform design
 
-***
+- Objective: reproducible, secure, and observable VM for lab workloads.
+- Base: Rocky Linux 9 on lab_network, provisioned via Ansible roles.
+- Principles: idempotent roles, least-privilege secrets, immutable container runtime.
+
 ```mermaid
 erDiagram
-
-"Lab Playground server" {
+"Lab Playground Server" {
   type virtualmachine
   os rockylinux9
   network lab_network
+  cpu 2_vCPU
+  memory 4_GiB
+  storage 50_GiB
 }
-"Lab Playground server" ||--|| "base_os_config" : "01. install"
-"base_os_config" {
+
+"Lab Playground Server" ||--|| "base_os_config" : "01. install"
+base_os_config {
   type role
   description base_operatingsystem_configuration
   action install
 }
-"Lab Playground server" ||--|| "podman" : "02. install"
-"podman" {
+
+"Lab Playground Server" ||--|| "podman" : "02. install"
+podman {
   type role
-  description podman_container_infrastructure
+  description container_runtime
   action install
 }
 
-"Lab Playground server" ||--|| "cockpit" : "03. install"
-"cockpit" {
+"Lab Playground Server" ||--|| "cockpit" : "03. install"
+cockpit {
   type role
   description system_management_ui
   action install
 }
-"Lab Playground server" ||--|| "vault" : "04. install"
-"vault" {
+
+"Lab Playground Server" ||--|| "openbao" : "04. install"
+openbao {
   type role
-  description secrets_management    
+  description secrets_management
   action install
 }
-"Lab Playground server" ||--|| "base_os_config" : "05. install"
-"base_os_config" {
+
+"Lab Playground Server" ||--|| "openbao_integration" : "05. configure"
+openbao_integration {
   type role
-  description configure_virtualmachine_in_vault
-  action configure_vault
+  description register_vm_and_bootstrap_secrets
+  action configure
 }
-"Lab Playground server" ||--|| "mysql" : "06. install"
-"mysql" {
+
+"Lab Playground Server" ||--|| "nexus_repository" : "06. install"
+nexus_repository {
   type role
-  description database_server
+  description repository_management
   action install
 }
-"Lab Playground server" ||--|| "semaphore" : "07. install"
-"semaphore" {
+
+"Lab Playground Server" ||--|| "monitoring" : "07. install"
+monitoring {
   type role
-  description ansible_ui
+  description metrics_and_alerting
   action install
 }
-"Lab Playground server" ||--|| "gogs" : "08. install"
-"gogs" {
+
+"Lab Playground Server" ||--|| "logging" : "08. install"
+logging {
   type role
-  description gitlab_container    
+  description centralized_logging
   action install
 }
-"Lab Playground server" ||--|| "nexus_repository" : "09. install"
-"nexus_repository" {
+
+"Lab Playground Server" ||--|| "backup" : "09. configure"
+backup {
   type role
-  description repository_management  
-  action install
+  description backup_and_recovery
+  action configure
 }
 ```
-***
 
+```mermaid
+flowchart TD
+A[VM provisioned (Rocky Linux 9)] --> B[01 Base OS config]
+B --> C[02 Podman]
+C --> D[03 Cockpit]
+D --> E[04 OpenBao]
+E --> F[05 OpenBao integration]
+F --> G[06 Nexus Repository]
+G --> H[07 Monitoring]
+H --> I[08 Logging]
+I --> J[09 Backup]
+```
+
+- Notes:
+  - Secrets are requested at runtime from OpenBao; no plaintext on disk.
+  - Monitoring/logging export container and host metrics/logs.
+  - Backups cover Nexus data and critical configs.

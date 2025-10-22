@@ -3,7 +3,7 @@
 ***
 
 <img src="media/banner_lab.png" align="left"/>
-An Ansible playbook to install and configure a development lab playground server. It will automatically install Ansible, Git, HashiCorp Vault, and Nexus Repository OSS. This serves as a foundation for an infrastructure-as-code playground environment. Use this playground to learn and experiment with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible playbooks and roles to become proficient in Ansible.
+An Ansible playbook to install and configure a development lab playground server. It will automatically install Ansible, Git, Openbao Vault, and Nexus Repository OSS. This serves as a foundation for an infrastructure-as-code playground environment. Use this playground to learn and experiment with Ansible playbooks and roles. Examine the framework and ultimately develop new Ansible playbooks and roles to become proficient in Ansible.
 
 ***
 
@@ -18,10 +18,10 @@ The play installs and configures the following applications using Ansible roles:
   Container infrastructure. Can be managed via the Cockpit user interface.<br>
   See also role [podman](roles/podman/README.md)<br>
 
-- **Hashicorp Vault**<br>
+- **Openbao Vault**<br>
   Secret management. Installed as a container, accessible via `http://<hostname>:8200`.<br>
   Access token and unseal keys are stored in /data/vault/config folder.<br>
-  See also role [vault](roles/vault/README.md)<br>
+  See also role [vault](roles/openbao/README.md)<br>
 
 - **Server-Config-Linux**<br>
   Basic server configuration role including configuration of the automation account, timezone configuration, base-server-config in Vault, etc.<br>
@@ -75,7 +75,7 @@ The Ansible Development server is used to clone and edit the code from Git and s
 See instructions for Lab Playground server.<br>
 Logon with user ansible and install the following packages on the development server: `sudo dnf install tar nano git python3.12 python3.12-pip`.<br>
 tar: for configuring Visual Studio Code remote SSH; nano: simple editor; git: version control system; python3.12 and python3.12-pip: prerequisites for Ansible.<br>
-Install Ansible: `python3.12 -m pip install ansible-core==2.18.9 passlib`.<br>
+Install Ansible: `python3.12 -m pip install ansible-core==2.18.9 ansible-lint passlib`.<br>
 
 Create SSH certificate via ssh-keygen: `ssh-keygen -t ed25519 -C "<your_email@example.com>"`<br>
 Copy the SSH key to the Lab Playground Server and Lab Core Services Server: `ssh-copy-id ansible@<ip address Lab Playground Server>` and `ssh-copy-id ansible@<ip address Lab Core Services Server>`.<br> 
@@ -102,14 +102,21 @@ ansible-playbook install_lab_core_services.yml -K
 # Configuration
 Following variables can be configured in the `install_lab_core_services` playbook:
 
+
 - **uninstall**: `true`/`false`, default is `false`. If `true`, roles will be uninstalled before installation.
-- **automation_username**: Default is `ansible`. The username for the automation account.
-- **automation_password**: If not provided, a password will be generated and stored in Vault.
-- **automation_email**: Default is `ansible@me.local`. Used during Nexus Repository OSS creation.
 - **vm_name**: Hostname of the VM.
-- **vault_repository_url**: Default is `docker.io/hashicorp/vault`.
-- **nexus_repository_url**: Default is `docker.io/sonatype/nexus3`.
-- **nexus_repository_vault_id**: Unique ID to identify the Nexus Repository instance in Vault.
+
+
+- **changelog**<br/>
+  The Changelog provides a detailed list of all the changes, updates, and improvements made to the project.
+  It helps users and developers to track the progress and understand the evolution of the project over time.<br>
+  See [changelog](docs/CHANGELOG.md)<br>
+
+
+- **roadmap**<br/>
+  The roadmap outlines the vision and future developments for the UCC Priming & Staging Platform. It provides a strategic plan detailing upcoming features, enhancements, and milestones. This helps stakeholders understand the direction and priorities of the project.<br>
+  See [roadmap](docs/ROADMAP.md)<br>
+
 
 # License
 MIT<br>

@@ -7,8 +7,8 @@ collections:
   - name: community.crypto
 
 roles:
-  - name: vault
-    src: https://github.com/marcelvenema/ansible-role-vault.git
+  - name: openbao
+    src: https://github.com/marcelvenema/ansible-role-openbao.git
     version: main
     scm: git
 
