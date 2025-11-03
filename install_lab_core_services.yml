@@ -70,9 +70,9 @@
     # Install Openbao Vault
     - name: Install Openbao Vault secret management...
       ansible.builtin.include_role:
-        name: openbao
+        name: vault
       vars:
-        action: "install"
+        action_type: "install"
         openbao:
           container:
             repository_url: "docker.io/openbao/openbao"
@@ -104,47 +104,16 @@
         name: nexus-repository
       vars:
         action: "create_repository"
-        nexus_repository_name: "files"
-        nexus_repository_type: "raw"
+        nexus_repository_name: "{{ item.name }}"
+        nexus_repository_type: "{{ item.type }}"
         nexus_repository:
           secrets:
             secret_name: "{{ server_hostname }}"
-
-    # Create repository
-    - name: Create repository (os_templates)...
-      ansible.builtin.include_role:
-        name: nexus-repository
-      vars:
-        action: "create_repository"
-        nexus_repository_name: "os_templates"
-        nexus_repository_type: "raw"
-        nexus_repository:
-          secrets:
-            secret_name: "{{ server_hostname }}"
-
-    # Create repository
-    - name: Create repository (operating_systems)...
-      ansible.builtin.include_role:
-        name: nexus-repository
-      vars:
-        action: "create_repository"
-        nexus_repository_name: "operating_systems"
-        nexus_repository_type: "raw"
-        nexus_repository:
-          secrets:
-            secret_name: "{{ server_hostname }}"
-
-    # Create repository
-    - name: Create repository (containers)...
-      ansible.builtin.include_role:
-        name: nexus-repository
-      vars:
-        action: "create_repository"
-        nexus_repository_name: "containers"
-        nexus_repository_type: "docker"
-        nexus_repository:
-          secrets:
-            secret_name: "{{ server_hostname }}"
+        loop:
+          - "{ name: files, type: raw }"
+          - "{ name: os_templates, type: raw }"
+          - "{ name: operating_systems, type: raw }"
+          - "{ name: containers, type: docker }"
 
     # Information message
     - name: Show information message
